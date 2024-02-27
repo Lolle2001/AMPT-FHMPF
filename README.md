@@ -1,21 +1,24 @@
 # AMPT-Processing
-This repositery contains code for running AMPT on multiple cores and processing the (large amount of) data into useful results. Currently it only gives data in a format used for my bachelor thesis. The goal is to generate the observables in the most general manner as possible, without having to work with gigabytes of data.
+This repositery contains code for running AMPT on multiple cores and processing the (large amount of) data into useful results. Currently it only gives data in a format used for my bachelor thesis. The goal is to convert the AMPT data into histograms, binned into centrality, participating nuclei, transverse momentum and (pseudo)rapidity, for every particle. This converts large amounts of data into a workable format which can be stored in RAM.
 
 ## Running AMPT
 
 ### Compiling
-When using the code for the first time, the bin directories have to be created using:
+Compiling can be done in two ways. One way uses the script ```compile.sh``` in the main folder. This script compiles version `v1.26t9b-v2.26t9b` of AMPT (from [here](https://myweb.ecu.edu/linz/ampt/)). It has one parameter to define the amount of bins that should be created. Because AMPT is inherently a single threaded program, every core needs a seperate directory in which the data is stored. . Example of use:
+```shell
+bash compile.sh numberofbins
+```
+The other way is to compile the code in a more advanced way. This can be done with `utils/createbins.sh`. It has three parameters: the first two designate the indices of the first and last bin that should be created. The third parameter is the name of the directory in ```./src``` that contains the fortran files of ampt. This way one can choose which version to use and it allows for bins to have different source codes. Example of use:
 ```shell
 bash utils/createbins.sh startbin endbin sourcecode
 ```
-* it is suggested to give ```startbin``` a value of 1 and ```endbin``` a value that equals the number of available CPU cores.
-* ```sourcecode``` is the name of the directory in ```./src``` that contains the fortran files of AMPT. This way one can choose which version to use.
-* make sure that in the ```exec``` file the random number generation is decommented such that the random seeds are generated correctly.
-* if you desire to run this in the background add ```&!``` at the end of the command.
+If this second way is used, then one must define the directories in `utils/directories.sh` before running AMPT.
+
+An overview of the different source codes included in the repo is listed below:
 * currently the source code is based on version ```ampt-v1.26t9b-v2.26t9b```, which can be found at this [website](https://myweb.ecu.edu/linz/ampt/).
-  * ```original``` is the original, unedited source code of the above described version.
-  * ```ellipticflow``` is an edited version which at the end calculates elliptic flow properties (from ```ana/ampt.dat``` and ```ana/zpc.dat```) and puts them in a folder ```ana1```.
-  * ```edited``` is a version that generates animation files, these can become quite large quickly and also make the simulations go very slow these files are also put in ```ana1```.
+* ```original``` is the original, unedited source code of the above described version.
+* ```ellipticflow``` is an edited version which at the end calculates elliptic flow properties (from ```ana/ampt.dat``` and ```ana/zpc.dat```) and puts them in a folder ```ana1```.
+* ```edited``` is a version that generates animation files, these can become quite large quickly and also make the simulations go very slow. These files are also put in ```ana1```. For animations it is recommended to only run 1 event.
 
 ### Updating
 When updating the bin directories one can use the command below in a similar fashion as above:
@@ -25,38 +28,28 @@ bash utils/recompile.sh startbin endbin sourcecode
 ### Running
 The code can be run (in the background) by using the command: 
 ```shell
-python3 rampt.py startbin endbin runnumber input/inputfile.ampt datafolder &!
+bash rampt.sh inputfile runnumber startbin endbin &!
 ```
+* ```inputfile```  the name of the inputfile with the specified parameters for AMPT.
+* ```runnumber```  the identification for the run.
+
 * ```startbin```   the ampt bin directory in which to start.
 * ```endbin```     the ampt bin directory in which to end.
-* ```runnumber```  the identification for the run.
-* ```inputfile```  the name of the inputfile with the specified parameters for AMPT.
-* ```datafolder``` the folder in which to store the resulting files from the AMPT simulation after a bin has finished (more efficiënt use of space).
-If in the input file it is specified that 1000 events have to ran, and if the startbin is 1 and endbin is 12, then 12000 events will be run in total of which thousand events will be ran simultaneously.
+* Data will be moved to the directory ```./datafolder/runnumber.``` into subdirectories corresponding to the used bins.
+* There will be three files: ```runnumber.log```, ```runnumber.err```, ```runnumber.time```
+* ```runnumber.log``` gives a general overview of the settings for running the code, including the total number of events, used directories and runtime.
+* ```runnumber.err``` gives encountered errors.
+* ```runnumber.time``` summarises the runtime.
+* Similarly each subdirectory also has these log files, giving the output of the `./ampt` executable and runtime.
 
-* Data will be moved to the directory ```./datafolder/runnumber.```
-* There will be three files: ```info.out```, ```other.out```, ```runtime.out```
-* ```info.out``` gives a general overview of the settings for running the code, including the total number of events, used directories and runtime.
-* ```other.out``` gives the stdout and stderr of the ampt executable for every bin.
-* ```runtime.out``` gives the runtime for each bindirectory.
-
-### Example commands
-To run 12 simulations simultaneously you can use the following commands. The simulation has runnumber 1, an input called input_1.ampt and the data is stored in a folder called data.
-```
-bash utils/createbins.sh 1 32 original
-python3 rampt.py 1 12 1 input/input_1.ampt data &!
-```
-
-### Advanced
-When one has many cpu cores available one can decide to run multiple input files (with for example different energies). One can use the command:
+If one desires to run a batch of jobs one can generate a `.job` file with consecutive executions of the above. The default can be executed as:
 ```shell
-python3 multirampt.py numberofbins datafolder &!
+bash ampt.job &!
 ```
-* For this one has to specify the directories to the input files in the ```multirampt.txt``` file with the corresponding runnumber.
-* This method is prone to errors and is only efficiënt if the simulation times are approximately the same for each input file in all other cases one would want to make a queee system which waits for the normal python script to finish before putting out another run.
-
-### Errors
-When running into errors with the code, make sure that the code that is used was compiled on the same machine and that all directories are correct. There might be some errors regarding paths in the code.
+Note that first the file must be generated with `utils/inputgen.py`, which is a selfexplanatory code, that must be edited to get desired input files. It can be ran using:
+```shell
+python3 utils/inputgen.py
+```
 
 ## Data processing
 ### Processing methods
