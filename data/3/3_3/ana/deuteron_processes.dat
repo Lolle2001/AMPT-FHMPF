@@ -1,0 +1,20 @@
+           1  *           7  ->d+           5  (regular d prodn)    @evt#           1  @nt=          71
+           1  *           8  ->d+           5  (regular d prodn)    @evt#           1  @nt=         105
+  d+           5  (regular d M elastic) @evt#           1  @nt=         106  lb1,2=           5          42
+  d+           1  (regular d B elastic) @evt#           1  @nt=         110  lb1,2=          42           1
+           9  *           2  ->d+           5  (regular d prodn)    @evt#           1  @nt=         112
+  d+           9  (regular d B elastic) @evt#           1  @nt=         127  lb1,2=          42           9
+  d+           1  (regular d B elastic) @evt#           1  @nt=         155  lb1,2=           1          42
+  d+           2  (regular d B elastic) @evt#           1  @nt=         188  lb1,2=           2          42
+  d+           1  (regular d B elastic) @evt#           1  @nt=         202  lb1,2=           1          42
+  d+           2  (regular d B elastic) @evt#           1  @nt=         218  lb1,2=           2          42
+  d+           2  (regular d B elastic) @evt#           1  @nt=         271  lb1,2=           2          42
+  d+           2  (regular d B elastic) @evt#           1  @nt=         285  lb1,2=           2          42
+  d+           2  (regular d B elastic) @evt#           1  @nt=         292  lb1,2=           2          42
+  d+           1  (regular d B elastic) @evt#           1  @nt=         292  lb1,2=           1          42
+  d+           2  (regular d B elastic) @evt#           1  @nt=         302  lb1,2=           2          42
+  d+           1  (regular d B elastic) @evt#           1  @nt=         303  lb1,2=           1          42
+  d+           1  (regular d B elastic) @evt#           1  @nt=         321  lb1,2=           1          42
+  d+           1  (regular d B elastic) @evt#           1  @nt=         333  lb1,2=           1          42
+           6  *           1  ->d+           4  (regular d prodn)    @evt#           1  @nt=         595
+  d+          12  (regular d B elastic) @evt#           1  @nt=         650  lb1,2=          12          42

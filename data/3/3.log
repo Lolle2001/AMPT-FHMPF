@@ -1,0 +1,78 @@
+╭────────────────────────────────────────────────────────────────────────╮
+│ AMPT Multiprocesser                                                    │
+│ Version 3.0                                                            │
+│ Made by Lieuwe Huisman                                                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ Bin Directory    : /home/lieuwe/Documents/Software/AMPT/bin            │
+│ Input Directory  : /home/lieuwe/Documents/Software/AMPT/input          │
+│ Output Directory : /home/lieuwe/Documents/Software/AMPT/data           │
+│ Used Bins        : 001 to 020                                          │
+│ Used CPU Count   : 020                                                 │
+│ Number of Events : 20                                                  │
+│ Starting Time    : ma 26 feb 2024 12:06:43 CET                         │
+├────────────────────────────────────────────────────────────────────────┤
+│ Job 01 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 02 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 03 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 04 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 05 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 06 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 07 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 09 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 08 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 11 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 12 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 10 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 13 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 13 finished at : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 13 finished in :                                                   │
+│ Job 14 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 15 started at  : ma 26 feb 2024 12:06:43 CET                       │
+│ Job 16 started at  : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 14 finished at : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 14 finished in :                                                   │
+│ Job 17 started at  : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 15 finished at : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 15 finished in :                                                   │
+│ Job 16 finished at : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 16 finished in :                                                   │
+│ Job 18 started at  : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 17 finished at : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 17 finished in :                                                   │
+│ Job 19 started at  : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 18 finished at : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 18 finished in :                                                   │
+│ Job 20 started at  : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 20 finished at : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 20 finished in :                                                   │
+│ Job 19 finished at : ma 26 feb 2024 12:06:44 CET                       │
+│ Job 19 finished in :                                                   │
+│ Job 08 finished at : ma 26 feb 2024 12:07:22 CET                       │
+│ Job 08 finished in :                                                   │
+│ Job 09 finished at : ma 26 feb 2024 12:07:23 CET                       │
+│ Job 09 finished in :                                                   │
+│ Job 01 finished at : ma 26 feb 2024 12:07:23 CET                       │
+│ Job 01 finished in :                                                   │
+│ Job 02 finished at : ma 26 feb 2024 12:07:23 CET                       │
+│ Job 02 finished in :                                                   │
+│ Job 06 finished at : ma 26 feb 2024 12:07:23 CET                       │
+│ Job 06 finished in :                                                   │
+│ Job 11 finished at : ma 26 feb 2024 12:07:24 CET                       │
+│ Job 11 finished in :                                                   │
+│ Job 05 finished at : ma 26 feb 2024 12:07:24 CET                       │
+│ Job 05 finished in :                                                   │
+│ Job 12 finished at : ma 26 feb 2024 12:07:24 CET                       │
+│ Job 12 finished in :                                                   │
+│ Job 03 finished at : ma 26 feb 2024 12:07:24 CET                       │
+│ Job 03 finished in :                                                   │
+│ Job 07 finished at : ma 26 feb 2024 12:07:24 CET                       │
+│ Job 07 finished in :                                                   │
+│ Job 10 finished at : ma 26 feb 2024 12:07:24 CET                       │
+│ Job 10 finished in :                                                   │
+│ Job 04 finished at : ma 26 feb 2024 12:07:24 CET                       │
+│ Job 04 finished in :                                                   │
+├────────────────────────────────────────────────────────────────────────┤
+│ Ending Time      : ma 26 feb 2024 12:07:24 CET                         │
+│ Elapsed Time     :                                                     │
+│ Time per event   :                                                     │
+╰────────────────────────────────────────────────────────────────────────╯
