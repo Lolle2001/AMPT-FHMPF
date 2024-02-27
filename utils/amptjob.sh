@@ -16,7 +16,7 @@ NEVENT=$(($SEVENT * ($BINMAX-$BINMIN+1)))
 
 printf "╭────────────────────────────────────────────────────────────────────────╮\n"
 printf "│ %-70s │\n" "AMPT Multiprocesser"                                        
-printf "│ %-70s │\n" "Version 3.0"           
+printf "│ %-70s │\n" "Version 3.0.0"           
 printf "│ %-70s │\n" "Made by Lieuwe Huisman"
 printf "├────────────────────────────────────────────────────────────────────────┤\n"
 printf "│ Bin Directory    : %-51s │\n" $BINFOLDER
