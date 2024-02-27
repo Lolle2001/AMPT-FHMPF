@@ -3,3 +3,7 @@ output
 bin/*
 input/*
 .vscode
+token
+
+!input/default.par
+!input/test.par
