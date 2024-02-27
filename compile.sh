@@ -25,9 +25,6 @@ echo 'UTILSFOLDER="'$PWD'/utils"' >> "utils/directories.sh"
 source $(dirname $0)/utils/directories.sh
 
 
-    
-
-
 printf "├────────────────────────────────────────────────────────────────────────┤\n"
 printf "│ Number of Bins   : %-51s │\n" $NUMBEROFBINS
 printf "│ Bin Directory    : %-51s │\n" $BINFOLDER
