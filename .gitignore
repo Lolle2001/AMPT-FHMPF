@@ -1,6 +1,6 @@
-data/*
+data
 output
-bin/*
+bin
 input/*
 .vscode
 token

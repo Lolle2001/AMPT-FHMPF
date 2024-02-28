@@ -1,9 +1,22 @@
 I=$1
 BINID=$2
-MAINFOLDER=$3
-BINFOLDER=$4
-RUNNUMBER=$5
+RUNNUMBER=$3
+
+RANDOM_ISEEDP=1 # to generate a random seed for the parton cascade for every bin
+
 source $(dirname $0)/timer.sh
+source $(dirname $0)/directories.sh
+
+
+
+if [ $RANDOM_ISEEDP -eq 1 ]
+then
+    RAND=$(( ($RANDOM % 100000000 ) + 1 ))
+    sed -i "30s/.*/${RAND}/" "$BINFOLDER/ampt_$BINID/input.ampt"
+fi
+
+cp "$BINFOLDER/ampt_$BINID/input.ampt" "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I/input.par"
+
 cd "$BINFOLDER/ampt_$BINID"
 
 mkdir -p "ana"
@@ -14,6 +27,8 @@ STARTDATE_L=$(cdate)
 
 printf "│ Job %02d started at  : %-49s │\n" $I "$STARTDATE_L"
 cp input.ampt ana/
+
+
 nrandom=$(date '+%d%H%M%S')
 
 
