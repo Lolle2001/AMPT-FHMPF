@@ -16,7 +16,7 @@ NEVENT=$(($SEVENT * ($BINMAX-$BINMIN+1)))
 
 printf "╭────────────────────────────────────────────────────────────────────────╮\n"
 printf "│ %-70s │\n" "AMPT Multiprocesser"                                        
-printf "│ %-70s │\n" "Version 3.0"           
+printf "│ %-70s │\n" "Version 3.0.0"           
 printf "│ %-70s │\n" "Made by Lieuwe Huisman"
 printf "├────────────────────────────────────────────────────────────────────────┤\n"
 printf "│ Bin Directory    : %-51s │\n" $BINFOLDER
@@ -39,9 +39,9 @@ do
     rm -rf "$BINFOLDER/ampt_$BINID/ana"
     rm -rf "$BINFOLDER/ampt_$BINID/ana1"
     mkdir -p "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I"
-    cp "$INPUTFOLDER/$INPUT" "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I/input.par"
+    # cp "$INPUTFOLDER/$INPUT" "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I/input.par"
     cp "$INPUTFOLDER/$INPUT" "$BINFOLDER/ampt_$BINID/input.ampt"
-    bash "$UTILSFOLDER/amptsinglejob.sh" $I $BINID $MAINFOLDER $BINFOLDER $RUNNUMBER &
+    bash "$UTILSFOLDER/amptsinglejob.sh" $I $BINID $RUNNUMBER &
 done
 wait
 for BINID in $(seq $BINMIN $BINMAX)

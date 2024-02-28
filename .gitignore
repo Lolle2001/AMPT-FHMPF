@@ -1,4 +1,9 @@
 data
 output
 bin
-input
+input/*
+.vscode
+token
+
+!input/default.par
+!input/test.par
