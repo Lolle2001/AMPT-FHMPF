@@ -15,19 +15,25 @@
 #include <chrono>
 #include <sstream>
 
+
+
+
 namespace AMPT {
     namespace Statistics {
-
-        // class Statistics {
-        //     public: 
-        //     std::vector<std::vector<std::map<int, StatisticsContainer>>> event_momentum_pseudorapidity_vector_map;
-        // };
         using Vector3DMap = std::vector<std::vector<std::vector<std::map<int, StatisticsContainer>>>>;
         using Vector2DMap = std::vector<std::vector<std::map<int, StatisticsContainer>>>;
         using Vector1DMap = std::vector<std::map<int, StatisticsContainer>>;
         using Vector1DMapVector1D = std::vector<std::map<int, std::vector<StatisticsContainer>>>;
         using Vector1DMapVector2D = std::vector<std::map<int, std::vector<std::vector<StatisticsContainer>>>>;
         using MapVector1D = std::map<int, std::vector<StatisticsContainer>>;
+
+        double igcd(double a, double b, double base);
+
+        // class Statistics {
+        //     public: 
+        //     std::vector<std::vector<std::map<int, StatisticsContainer>>> event_momentum_pseudorapidity_vector_map;
+        // };
+        
 
         struct StatisticsArray1D {
             Vector1DMapVector1D CMap;
@@ -330,6 +336,21 @@ namespace AMPT {
             // For flexible data comparison, a binwidth of 0.01 is recommended for transverse momentum.
             // to a range of 20. One may also apply a custom binrange.
 
+            std::vector<double> centrality_edges       = {0, 1.57, 2.22, 2.71, 3.13, 3.5, 4.94, 6.05, 6.98, 7.81, 8.55, 9.23, 9.88, 10.47, 11.04, 11.58, 12.09, 12.58, 13.05, 13.52, 13.97, 14.43, 14.96, 15.67, 20};
+
+            std::map < int, int > IndexMapX;
+            std::map < int, int > IndexMapY;
+            std::map < int, int > IndexMapZ;
+            double x_max;
+            double x_min;
+            double x_width;
+            double y_max;
+            double y_min;
+            double y_width;
+            double z_max;
+            double z_min;
+            double z_width;
+            
             int momentum_nbins;
             int pseudorapidity_nbins;
             Statistics(){
@@ -366,6 +387,7 @@ namespace AMPT {
                 TransverseMomentum.resize(ExpectedSize, pseudorapidity_nbins);
                 ParticleYield.resize(ExpectedSize, momentum_nbins, pseudorapidity_nbins);
                 EllipticFlow.resize(ExpectedSize, momentum_nbins, pseudorapidity_nbins);
+                InitializeIndexMaps();
             }
 
             void Convert(){
@@ -393,14 +415,14 @@ namespace AMPT {
                             line.PseudoRapidity >= pseudorapidity_edges[k] && 
                             line.PseudoRapidity < pseudorapidity_edges[k+1]
                             ){
-                                for(int i = 0; i < 6; ++i){
-                                    if(line.v[i]==line.v[i]){
-                                        v[i].VectorMap_3D[ievent][j][k][line.ParticlePythiaID].Add(line.v[i]);
+                                for(int i = 0; i < 4; ++i){
+                                    if(line.AnisotropicFlow[i]==line.AnisotropicFlow[i]){
+                                        v[i].VectorMap_3D[ievent][j][k][line.ParticlePythiaID].Add(line.AnisotropicFlow[i]);
                                     }
                                 }
-                                if(line.EllipticFlow==line.EllipticFlow){
-                                    EllipticFlow.VectorMap_3D[ievent][j][k][line.ParticlePythiaID].Add(line.EllipticFlow);
-                                }
+                                // if(line.AnisotropicFlow[2]==line.AnisotropicFlow[2]){
+                                //     EllipticFlow.VectorMap_3D[ievent][j][k][line.ParticlePythiaID].Add(line.EllipticFlow);
+                                // }
                                 
                                 ParticleYield.VectorMap_3D[ievent][j][k][line.ParticlePythiaID].Total += 1;
                                 
@@ -411,6 +433,134 @@ namespace AMPT {
                             TransverseMomentum.DMap[ievent][k][line.ParticlePythiaID].Add(line.TransverseMomentum);
                     }
                 }
+            }
+
+            void InitializeIndexMaps(){
+                int x_edges_size = momentum_edges.size() - 1;
+                int y_edges_size = pseudorapidity_edges.size() - 1;
+                int z_edges_size = centrality_edges.size() - 1;
+                // std::cout << y_edges_size << std::endl;
+
+                x_max = momentum_edges.back() ;
+                x_min = momentum_edges.front();
+                y_max = pseudorapidity_edges.back() ;
+                y_min = pseudorapidity_edges.front();
+                z_max = centrality_edges.back() ;
+                z_min = centrality_edges.front();
+
+                std::vector<double> xwidths(x_edges_size);
+                std::vector<double> ywidths(y_edges_size);
+                std::vector<double> zwidths(z_edges_size);
+                for(int ix = 0; ix < x_edges_size; ++ix){
+                    xwidths[ix] = momentum_edges[ix+1] - momentum_edges[ix];
+                    // std::cout << xwidths[ix] << std::endl;
+                }
+                for(int iy = 0; iy < y_edges_size; ++iy){
+                    ywidths[iy] = pseudorapidity_edges[iy+1] - pseudorapidity_edges[iy];
+                }
+                for(int iz = 0; iz < z_edges_size; ++iz){
+                    zwidths[iz] = centrality_edges[iz+1] - centrality_edges[iz];
+                }
+
+                double x_smallest_width = xwidths[0];
+                double y_smallest_width = ywidths[0];
+                double z_smallest_width = zwidths[0];
+                double width;
+
+                for(int ix = 0; ix < x_edges_size; ++ix){
+                    for(int jx = ix + 1; jx < x_edges_size; ++jx){
+                        width = igcd(xwidths[ix], xwidths[jx], 0.001);
+                        if(width < x_smallest_width){
+                            x_smallest_width = width;
+                        }
+                    }
+                }
+                for(int iy = 0; iy < y_edges_size; ++iy){
+                    for(int jy = iy + 1; jy < y_edges_size; ++jy){
+                        width = igcd(ywidths[iy], ywidths[jy], 0.001); 
+                        if(width < y_smallest_width){
+                            y_smallest_width = width;
+                        }
+                    }
+                }
+                for(int iz = 0; iz < z_edges_size; ++iz){
+                    for(int jz = iz + 1; jz < z_edges_size; ++jz){
+                        width = igcd(zwidths[iz], zwidths[jz], 0.001); 
+                        if(width < z_smallest_width){
+                            z_smallest_width = width;
+                        }
+                    }
+                }
+            
+                x_width = x_smallest_width ;
+                int x_nbins = static_cast<int>((x_max - x_min)/x_width);
+                    
+                y_width = y_smallest_width;
+                int y_nbins = static_cast<int>((y_max - y_min)/y_width);
+
+                z_width = z_smallest_width;
+                int z_nbins = static_cast<int>((z_max - z_min)/z_width);
+            
+
+                double x;
+                double y;
+                double z;
+
+                for(int ix = 0; ix < x_nbins; ++ix){
+                    x = (x_min + ix * x_width + x_width * 0.5);
+                    
+                    for(int jx = 0; jx < x_edges_size; ++jx){
+                        if(x > momentum_edges[jx] && x < momentum_edges[jx+1]){
+                            IndexMapX[ix] = jx;
+                        }
+                    }
+                }
+                for(int iy = 0; iy < y_nbins; ++iy){
+                    y = (y_min + iy * y_width + y_width * 0.5);
+                    
+                    for(int jy = 0; jy < y_edges_size; ++jy){
+                        if(y > pseudorapidity_edges[jy] && y < pseudorapidity_edges[jy+1]){
+                            IndexMapY[iy] = jy;
+                        }
+                    }
+                }
+                for(int iz = 0; iz < z_nbins; ++iz){
+                    z = (z_min + iz * z_width + z_width * 0.5);
+                    
+                    for(int jz = 0; jz < z_edges_size; ++jz){
+                        if(z > centrality_edges[jz] && z < centrality_edges[jz+1]){
+                            IndexMapZ[iz] = jz;
+                        }
+                    }
+                }
+
+                // x_nbins = x_edges_size;
+                // y_nbins = y_edges_size;
+                // z_nbins = z_edges_size;
+            }
+
+            int Add2(double & b, AMPT::Line_ampt & line){//, Vector2DMap & map){
+                // std::cout << x_min << " " << x_width << std::endl;
+                int ix = IndexMapX[static_cast<int>((line.TransverseMomentum - x_min)/(x_width))];
+                int iy = IndexMapY[static_cast<int>((line.Rapidity - y_min)/(y_width))];
+                int iz = IndexMapZ[static_cast<int>((b - z_min)/(z_width))];
+
+                // std::cout << ix << " " << iy << " " << iz << std::endl;
+               
+                for(int i = 0; i < 4; ++i){
+                    if(line.AnisotropicFlow[i]==line.AnisotropicFlow[i]){
+                        v[i].VectorMap_3D[iz][ix][iy][line.ParticlePythiaID].Add(line.AnisotropicFlow[i]);
+                    }
+                }
+                if(line.AnisotropicFlow[2]==line.AnisotropicFlow[2]){
+                    EllipticFlow.VectorMap_3D[iz][ix][iy][line.ParticlePythiaID].Add(line.AnisotropicFlow[2]);
+                }
+                
+                ParticleYield.VectorMap_3D[iz][ix][iy][line.ParticlePythiaID].Total += 1;
+                   
+                   
+                TransverseMomentum.DMap[iz][iy][line.ParticlePythiaID].Add(line.TransverseMomentum);
+                return iz;
             }
             
             

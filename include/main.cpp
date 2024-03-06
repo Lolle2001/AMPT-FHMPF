@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     std::cout << PP::highlight << "│ " << PP::end << "Made by Lieuwe Huisman                                              " << PP::highlight << " │" << '\n';
     std::cout << PP::highlight << "╰─"               "────────────────────────────────────────────────────────────────────"                  << "─╯" << '\n';
     // std::cout << std::endl;
-    AMPT::File_ampt  * ampt  = AMPT::Combine_ampt_multi_queued(NRun, 1, NBatch, Directory + "/", 20);
+    AMPT::File_ampt  * ampt  = AMPT::Combine_ampt_multi_queued_omp(NRun, 1, NBatch, Directory + "/", 20);
     AMPT::File_input * input = AMPT::Combine_file_input       (NRun, 1, NBatch, Directory + "/");
 
 

@@ -14,9 +14,7 @@ namespace AMPT {
     Object that temporarly stores data from a read line. Putting it in to an 
     object allows cleaner code and easier generalisation of functions.
     */
-    struct Line {
 
-    };
 
     
     struct StatisticsContainer  {
@@ -158,91 +156,6 @@ namespace AMPT {
             return output;
         }
     };
-
-    
-    /*
-    This class is a container for the statistics of the AMPT simulation. 
-    It contains general functions for the child objects to access and 
-    update the statistics.
-    // */
-    // class Statistics {
-    //     public:
-        
-        
-    //         // std::vector<std::vector<std::vector<std::map<int, StatisticsContainer * >>>> statistics;
-
-
-    //         Statistics(){};
-
-
-    //         // virtual void Add(Line & line){
-
-    //         // }
-
-    //         virtual void Calculate(){
-
-    //         }
-
-    //         void operator+=(const Statistics& other){
-
-    //         };
-    // };
-
-    // class FourierFlow {
-    //     public:
-    //         std::vector<std::map<int, StatisticsContainer>> RadialFlow;
-    //         std::vector<std::map<int, StatisticsContainer>> EllipticFlow;
-    //         // std::vector<std::map<int, StatisticsContainer>> Flow3;
-    //         // std::vector<std::map<int, StatisticsContainer>> Flow4;
-    //         // std::vector<std::map<int, StatisticsContainer>> Flow5;
-    //         // std::vector<std::map<int, StatisticsContainer>> Flow6;
-    //         // std::vector<std::map<int, StatisticsContainer>> Flow7;
-
-    //         FourierFlow(){};
-
-    //         // void Add(Line_ampt & line , int & Event){
-    //         //     if(line.EllipticFlow==line.EllipticFlow){
-    //         //         if(line.TransverseMomentum > 0.1 && line.TransverseMomentum < 4. && line.PseudoRapidity > -0.5 && line.PseudoRapidity < 0.5 && ChargeMap[line.ParticlePythiaID] != 0){
-    //         //                     EllipticFlow[Event][line.ParticlePythiaID].Add(line.EllipticFlow);
-    //         //         }
-    //         //     }
-    //         // }
-
-    //         // void Add(Line & line){
-
-    //         // }
-
-    //     // friend std::istream& operator>>(std::istream& input, Block_ampt& obj){
-    //     //     input 
-    //     //     >> obj.EventID 
-    //     //     >> obj.EventIterationFlag  
-    //     //     >> obj.NumberOfParticles
-    //     //     >> obj.ImpactParameter
-    //     //     >> obj.NumberOfParticipantNucleons_PROJ
-    //     //     >> obj.NumberOfParticipantNulceons_TARG
-    //     //     >> obj.NumberOfParticipantNucleonsElastic_PROJ
-    //     //     >> obj.NumberOfParticipantNucleonsInelastic_PROJ
-    //     //     >> obj.NumberOfParticipantNucleonsElastic_TARG
-    //     //     >> obj.NumberOfParticipantNucleonsInelastic_TARG
-    //     //     >> obj.PhiRP; 
-    //     //     return input;
-    //     // }
-
-
-    // };
-    // class TransverseMomentum : Statistics {
-
-    // };
-    // class TransverseMass : Statistics {
-
-    // };
-    // class ParticleYield : Statistics {
-
-    // };
-
-
-
-
     
 }
 
