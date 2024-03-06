@@ -4,6 +4,8 @@ bin
 input/*
 .vscode
 token
+include/new
+include/old
 
 !input/default.par
 !input/test.par
