@@ -42,7 +42,11 @@ do
     # cp "$INPUTFOLDER/$INPUT" "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I/input.par"
     cp "$INPUTFOLDER/$INPUT" "$BINFOLDER/ampt_$BINID/input.ampt"
     bash "$UTILSFOLDER/amptsinglejob.sh" $I $BINID $RUNNUMBER &
+    # sleep 1
 done
+
+
+
 wait
 for BINID in $(seq $BINMIN $BINMAX)
 do

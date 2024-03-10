@@ -181,15 +181,16 @@ class AMPT_parameters :
                     if(j < 42 or j > 48):
                         if(generate_zpc_seed == True and key == "ISEEDP"):
                             File.write("{0}\n".format(random.randint(1, 99999999)))
-                        File.write("{0}\n".format(self.parameterdict[key][i]))
+                        else:
+                            File.write("{0}\n".format(self.parameterdict[key][i]))
                     elif(j == 42):
                         File.write("{0}, {1}\n".format(list(self.parameterdict.values())[42][i], list(self.parameterdict.values())[43][i]))
                     elif(j == 44):
                         File.write("{0}, {1}\n".format(list(self.parameterdict.values())[44][i], list(self.parameterdict.values())[45][i]))
                     elif(j == 46):
                         File.write("{0}, {1}, {2}\n".format(list(self.parameterdict.values())[46][i], list(self.parameterdict.values())[47][i],list(self.parameterdict.values())[48][i]))
-                    else:
-                        print("error")
+                    # else:
+                        # print("error")
                 File.close()
                   
         else:
@@ -264,13 +265,18 @@ if __name__=="__main__":
     # par2.parameterdict["ISOFT"] = [1]
     # par2.Write(runnumber=2)
 
-    par3 = AMPT_parameters(6)
-    par3.parameterdict["HIPR1_14"] = [0, 1.5, 1.8, 2.0, 2.2, 2.4]
+    par3 = AMPT_parameters(1)
+    # par3.parameterdict["XMU"] = [3.2]
+    # par3.parameterdict["PARJ_41"] = [0.3]
+    # par3.parameterdict["PARJ_42"] = [0.15]
     par3.parameterdict["NEVENT"] = [100]
     par3.parameterdict["BMIN"] = [8.55]
     par3.parameterdict["BMAX"] = [9.87]
     par3.parameterdict["ISOFT"] = [1]
     par3.Write(runnumber=4)
+
+    tabulate([4000])
     
-    # write_job_script([3000, 3001,3002,3003,3004,3005,2000,2001,2002,2003,2004])
+    
+    write_job_script([4000])
     

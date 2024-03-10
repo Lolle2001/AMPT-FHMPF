@@ -12,7 +12,12 @@ source $(dirname $0)/directories.sh
 if [ $RANDOM_ISEEDP -eq 1 ]
 then
     RAND=$(( ($RANDOM % 100000000 ) + 1 ))
-    sed -i "30s/.*/${RAND}/" "$BINFOLDER/ampt_$BINID/input.ampt"
+    # echo $RAND
+    if [ "$(uname)" = "Darwin" ]; then
+        sed -i '' "30s/.*/${RAND}/" "$BINFOLDER/ampt_$BINID/input.ampt"
+    else    
+        sed -i "30s/.*/${RAND}/" "$BINFOLDER/ampt_$BINID/input.ampt"
+    fi
 fi
 
 cp "$BINFOLDER/ampt_$BINID/input.ampt" "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I/input.par"
