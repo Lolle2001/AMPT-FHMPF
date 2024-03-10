@@ -11,3 +11,4 @@ plots
 !input/test.par
 pdg
 build
+utils/__pycache__
