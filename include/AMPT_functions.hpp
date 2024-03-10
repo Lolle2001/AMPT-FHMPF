@@ -17,6 +17,10 @@
 namespace AMPT {
     namespace Functions {
        
+
+        double igcd(double a, double b, double base);
+
+
         template<typename T>
         void Concatenate(std::vector<T> &v1, const std::vector<T> &v2){
             v1.insert(std::end(v1), std::begin(v2), std::end(v2));

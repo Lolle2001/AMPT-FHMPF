@@ -1,5 +1,5 @@
-#ifndef HISTOGRAMMAP_HPP
-#define HISTOGRAMMAP_HPP
+#ifndef HISTOGRAM3D_HPP
+#define HISTOGRAM3D_HPP
 
 #include "StatisticsContainer.hpp"
 #include "AMPT_functions.hpp"
@@ -27,12 +27,16 @@ namespace AMPT {
         using Vector1DMapVector1D = std::vector<std::map<int, std::vector<StatisticsContainer>>>;
         using Vector1DMapVector2D = std::vector<std::map<int, std::vector<std::vector<StatisticsContainer>>>>;
         using MapVector1D = std::map<int, std::vector<StatisticsContainer>>;
+
+        using Vector3D = std::vector<std::vector<std::vector<StatisticsContainer>>>;
+        using Vector2D = std::vector<std::vector<StatisticsContainer>>;
+        using Vector1D = std::vector<StatisticsContainer>;
         
 
-        class HistogramMap3D {
+        class Histogram3D {
             private:
-            Vector3DMap Contents;
-            Vector1DMapVector2D ContentsConverted;
+            Vector3D Contents;
+            
 
             int nx, ny, nz;
 
@@ -54,38 +58,37 @@ namespace AMPT {
             std::vector<double> EdgesZ;
 
             public:
-            HistogramMap3D(){};
-            HistogramMap3D(int & nx_, int & ny_, int & nz_);
-            HistogramMap3D(std::vector<double> EdgesX_, std::vector<double> EdgesY_, std::vector<double> EdgesZ_);
+            Histogram3D(){};
+            Histogram3D(int & nx_, int & ny_, int & nz_);
+            Histogram3D(std::vector<double> EdgesX_, std::vector<double> EdgesY_, std::vector<double> EdgesZ_);
 
             void Resize(int & nx_, int & ny_, int & nz_);
 
             void InitializeIndexMap();
 
             void AddEvent();
+            void Add(double & valx, double & valy, double & valz, double  valcontent);
+            void AddCurrent(double & valx, double & valy, double & valz, double  valcontent);
 
-            void Add(double & valx, double & valy, double & valz, int & key, double valcontent);
-            void AddCurrent(double & valx, double & valy, double & valz, int & key, double valcontent);
-
-            void Convert();
-
+            // void Convert();
+            void PrintEdges(std::ostream & output);
             void PrintTotalSQR(std::ostream & output);
             void PrintTotal(std::ostream & output);
             void PrintCount(std::ostream & output);
 
             
             
-            StatisticsContainer & operator()(int & ix, int & iy, int & iz, int & key);
-            Vector0DMap & operator()(int & ix, int & iy, int & iz);
-            Vector1DMap & operator()(int & ix, int & iy);
-            Vector2DMap & operator()(int & ix);
+            
+            StatisticsContainer & operator()(int & ix, int & iy, int & iz);
+            Vector1D & operator()(int & ix, int & iy);
+            Vector2D & operator()(int & ix);
 
-            StatisticsContainer & operator()(double & valx, double & valy, double & valz, int & key);
-            Vector0DMap & operator()(double & valx, double & valy, double & valz);
-            Vector1DMap & operator()(double & valx, double & valy);
-            Vector2DMap & operator()(double & valx);
+            
+            StatisticsContainer & operator()(double & valx, double & valy, double & valz);
+            Vector1D & operator()(double & valx, double & valy);
+            Vector2D & operator()(double & valx);
 
-            void operator+=(HistogramMap3D const & obj);
+            void operator+=(Histogram3D const & obj);
 
 
 

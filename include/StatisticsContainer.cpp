@@ -1,74 +1,59 @@
-#ifndef AMPT_STATISTICS_HPP
-#define AMPT_STATISTICS_HPP
+#include "StatisticsContainer.hpp"
 
-// #include "AMPT_ampt.hpp"
-#include <vector>
-#include <map>
-#include <iostream>
-#include <string>
-#include <iomanip>
-#include <cmath>
 
 namespace AMPT {
-    /*
-    Object that temporarly stores data from a read line. Putting it in to an 
-    object allows cleaner code and easier generalisation of functions.
-    */
-
-
-    
-    struct StatisticsContainer  {
-        long double Total             = 0;
-        long double TotalSQR          = 0;
-        long int    EntryCount        = 0;
-        long double Average           = 0;
-        long double AverageSQR        = 0;
-        long double Variance          = 0;
-        long double StandardDeviation = 0;
-        long double StandardError     = 0;
-        long int    SampleCount       = 0;
-        
-        // StatisticsContainer();
-       
-
-        void Add(long double value){
+    namespace Statistics {
+         void StatisticsContainer::Add(long double value){
             Total      += value;
             TotalSQR   += value*value;
             EntryCount += 1;
         }
 
-        void RedefineTotalSQR(){
+        void StatisticsContainer::AddCurrent(long double value){
+            TotalCurrent += value;
+            EntryCount   += 1;
+
+        }
+        void StatisticsContainer::AddEvent(){
+            // std::cout << "here" << std::endl;
+            Total    += TotalCurrent;
+            TotalSQR += TotalCurrent * TotalCurrent;
+            // std::cout << Total << std::endl;
+            TotalCurrent = 0;
+        }
+
+        void StatisticsContainer::RedefineTotalSQR(){
             TotalSQR = Total * Total;
         }
-        void SetVariance(long double Variance_){
+        void StatisticsContainer::SetVariance(long double Variance_){
             Variance = Variance_;
         }
-        void SetStandardError(long double StandardError_){
+        void StatisticsContainer::SetStandardError(long double StandardError_){
             StandardError = StandardError_;
         }
 
-        void CalculatePoissonError(){
+        void StatisticsContainer::CalculatePoissonError(){
             StandardDeviation = std::sqrt(Average);
         }
        
 
-        void CalculateAverage(){
+        void StatisticsContainer::CalculateAverage(){
             Average = Total/(long double)EntryCount;
         }
 
-        void CalculateAverageSQR(){     
+        void StatisticsContainer::CalculateAverageSQR(){     
             AverageSQR = TotalSQR/(long double)EntryCount;
         }
 
-        void CalculateVariance(){
+        void StatisticsContainer::CalculateVariance(){
             Variance = AverageSQR - Average*Average;
         }
 
-        void CalculateStandardDeviation(){
+        void StatisticsContainer::CalculateStandardDeviation(){
             StandardDeviation = std::sqrt(Variance);
         }
 
-        void CalculateStandardError(){
+        void StatisticsContainer::CalculateStandardError(){
             // if(SampleCount > 0){
             StandardError = StandardDeviation/std::sqrt(EntryCount);
             // }
@@ -77,7 +62,7 @@ namespace AMPT {
             // }
         }
 
-        void CalculateStatistics(){
+        void StatisticsContainer::CalculateStatistics(){
             CalculateAverage();
             CalculateAverageSQR();
             CalculateVariance();
@@ -85,42 +70,42 @@ namespace AMPT {
             CalculateStandardError();
         }
 
-        long double GetAverage(){
+        long double StatisticsContainer::GetAverage(){
             return Average;
         }
 
-        long double GetAverageSQR(){
+        long double StatisticsContainer::GetAverageSQR(){
             return AverageSQR;
         }
 
-        long double GetVariance(){
+        long double StatisticsContainer::GetVariance(){
             return Variance;
         }
 
-        long double GetStandardDeviation(){
+        long double StatisticsContainer::GetStandardDeviation(){
             return StandardDeviation;
         }
 
-        long double GetStandardError(){
+        long double StatisticsContainer::GetStandardError(){
             return StandardError;
         }
 
-        long int GetSampleCount(){
+        long int StatisticsContainer::GetSampleCount(){
             return SampleCount;
         }
 
-        long int GetEntryCount(){
+        long int StatisticsContainer::GetEntryCount(){
             return EntryCount;
         }
 
-        void operator+=(StatisticsContainer const& rhs){
+        void StatisticsContainer::operator+=(StatisticsContainer const& rhs){
             Total             += rhs.Total;
             TotalSQR          += rhs.TotalSQR;
             EntryCount        += rhs.EntryCount;
             SampleCount       += rhs.SampleCount;
         }
 
-        StatisticsContainer operator+(StatisticsContainer const& rhs){
+        StatisticsContainer StatisticsContainer::operator+(StatisticsContainer const& rhs){
             Total             += rhs.Total;
             TotalSQR          += rhs.TotalSQR;
             EntryCount        += rhs.EntryCount;
@@ -128,14 +113,14 @@ namespace AMPT {
             return * this;
         }
 
-        void operator-=(StatisticsContainer const& rhs){    
+        void StatisticsContainer::operator-=(StatisticsContainer const& rhs){    
             Total             -= rhs.Total;
             TotalSQR          -= rhs.TotalSQR;
             EntryCount        -= rhs.EntryCount;
             SampleCount       -= rhs.SampleCount;
         }
 
-        StatisticsContainer operator-(StatisticsContainer const& rhs){  
+        StatisticsContainer StatisticsContainer::operator-(StatisticsContainer const& rhs){  
             Total             -= rhs.Total;
             TotalSQR          -= rhs.TotalSQR;
             EntryCount        -= rhs.EntryCount;
@@ -143,7 +128,7 @@ namespace AMPT {
             return * this;
         }
 
-        friend std::ostream& operator<<(std::ostream& output, StatisticsContainer& obj){
+        std::ostream& operator<<(std::ostream& output, StatisticsContainer& obj){
             output << std::setw(13) << std::scientific << std::right << obj.Total            << " ";
             output << std::setw(13) << std::scientific << std::right << obj.TotalSQR         << " ";
             output << std::setw(13) << std::scientific << std::right << (long double)obj.EntryCount       << " ";
@@ -155,8 +140,5 @@ namespace AMPT {
             output << std::setw(13) << std::scientific << std::right << (long double)obj.SampleCount      ;
             return output;
         }
-    };
-    
+    }
 }
-
-#endif

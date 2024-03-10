@@ -1,14 +1,14 @@
-#include "HistogramMap.hpp"
+#include "Histogram3D.hpp"
 
 namespace AMPT {
     namespace Statistics {
 
 
-        HistogramMap3D::HistogramMap3D(int & nx_, int & ny_, int & nz_) : nx(nx_), ny(ny_), nz(nz_){
+        Histogram3D::Histogram3D(int & nx_, int & ny_, int & nz_) : nx(nx_), ny(ny_), nz(nz_){
             Resize(nx, ny, nz);
         };
 
-        HistogramMap3D::HistogramMap3D(
+        Histogram3D::Histogram3D(
             std::vector<double> EdgesX_, 
             std::vector<double> EdgesY_, 
             std::vector<double> EdgesZ_) : 
@@ -24,49 +24,49 @@ namespace AMPT {
         }
          
 
-        void HistogramMap3D::Resize(int & nx_, int & ny_, int & nz_){
-            Contents.resize(nx_, Vector2DMap(ny_, Vector1DMap(nz_)));
+        void Histogram3D::Resize(int & nx_, int & ny_, int & nz_){
+            Contents.resize(nx_, Vector2D(ny_, Vector1D(nz_)));
         }
 
-        void HistogramMap3D::AddEvent(){
+        void Histogram3D::AddEvent(){
             // std::cout << "#" << Contents[10][0][0][211].Total << std::endl;
             for(int ix = 0; ix < nx; ++ix){
                 for(int iy = 0; iy < ny; ++iy){
                     for(int iz = 0; iz < nz; ++iz){
-                        for(auto & entry : Contents[ix][iy][iz]){
+                        
                             
-                            entry.second.AddEvent();
+                            Contents[ix][iy][iz].AddEvent();
                             // entry.second.Total += entry.second.TotalCurrent;
                             // entry.second.TotalSQR += entry.second.TotalCurrent * entry.second.TotalCurrent;
                             // entry.second.TotalCurrent = 0;
                            
-                        }
+                        
                     }
                 }
             }
             // std::cout << "!" << Contents[10][0][0][211].Total << std::endl;
         }
 
-        void HistogramMap3D::Add(double & valx, double & valy, double & valz, int & key,  double valcontent){
+        void Histogram3D::Add(double & valx, double & valy, double & valz, double valcontent){
             if(valx >= x_min && valx < x_max && valy >= y_min && valy < y_max && valz >= z_min && valz < z_max){
                 int ix = IndexMapX[(int)((valx - x_min)/(x_width))];
                 int iy = IndexMapY[(int)((valy - y_min)/(y_width))];
                 int iz = IndexMapZ[(int)((valz - z_min)/(z_width))];
-                Contents[ix][iy][iz][key].Add(valcontent);
+                Contents[ix][iy][iz].Add(valcontent);
             }
         }
 
-        void HistogramMap3D::AddCurrent(double & valx, double & valy, double & valz, int & key,  double valcontent){
+        void Histogram3D::AddCurrent(double & valx, double & valy, double & valz, double valcontent){
             if(valx >= x_min && valx < x_max && valy >= y_min && valy < y_max && valz >= z_min && valz < z_max){
                 int ix = IndexMapX[(int)((valx - x_min)/(x_width))];
                 int iy = IndexMapY[(int)((valy - y_min)/(y_width))];
                 int iz = IndexMapZ[(int)((valz - z_min)/(z_width))];
-                Contents[ix][iy][iz][key].AddCurrent(valcontent);
+                Contents[ix][iy][iz].AddCurrent(valcontent);
             }
         }
 
 
-        void HistogramMap3D::InitializeIndexMap(){
+        void Histogram3D::InitializeIndexMap(){
             x_max = EdgesX.back() ;
             x_min = EdgesX.front();
             y_max = EdgesY.back() ;
@@ -172,84 +172,61 @@ namespace AMPT {
 
         }
 
-        void HistogramMap3D::Convert(){
-            ContentsConverted.resize(nx);
+        void Histogram3D::PrintEdges(std::ostream & output){
+            output << "nbins(x) = " << nx << "\n";
+            output << "edges(x) = ";
+            for(int ix = 0; ix <= nx; ++ix){
+                output << EdgesX[ix] << " ";
+            }
+            output << "\n";
+            output << "nbins(y) = " << ny << "\n";
+            output << "edges(y) = ";
+            for(int iy = 0; iy <= ny; ++iy){
+                output << EdgesY[iy] << " ";
+            }
+            output << "\n";
+            output << "nbins(z) = " << nz << "\n";
+            output << "edges(z) = ";
+            for(int iz = 0; iz <= nz; ++iz){
+                output << EdgesZ[iz] << " ";
+            }
+            output << "\n";
+
+        }
+
+
+        void Histogram3D::PrintCount(std::ostream & output){
+            // std::cout << nx << " " << ny << " " << nz << std::endl;
             for(int ix = 0; ix < nx; ++ix){
-                // centrality
+                output << "# " << ix << "\n";
                 for(int iy = 0; iy < ny; ++iy){
-                    // momentum
                     for(int iz = 0; iz < nz; ++iz){
-                        // rapidity
-                        for(const auto & entry : Contents[ix][iy][iz]){
-                            // std::cout << entry.second.Total << std::endl;
-                            if(ContentsConverted[ix].count(entry.first) == 0){
-                                ContentsConverted[ix][entry.first].resize(ny, std::vector<StatisticsContainer>(nz));
-                                ContentsConverted[ix][entry.first][iy][iz] = entry.second;
-                            }
-                            else{
-                                ContentsConverted[ix][entry.first][iy][iz] += entry.second;
-                            }
-                        }
+                        output << Contents[ix][iy][iz].EntryCount << " ";
+                        // std::cout << Contents[ix][iy][iz].EntryCount << std::endl;
                     }
+                    output << "\n";
                 }
             }
         }
-
-
-        void HistogramMap3D::PrintCount(std::ostream & output){
+        void Histogram3D::PrintTotalSQR(std::ostream & output){
             for(int ix = 0; ix < nx; ++ix){
-                // centrality
-                 output << "# " << ix << " " << ContentsConverted[ix].size() << "\n";
-                for(const auto & entry : ContentsConverted[ix]){
-                    // pid
-                    std::stringstream line;
-                    line << std::setw(7) << std::right << entry.first << " ";
-                    for(int iy = 0; iy < ny; ++iy){
-                        // momentum
-                        for(int iz = 0; iz < nz; ++iz){
-                            // rapidity
-                            line << std::setw(15) << std::right << entry.second[iy][iz].EntryCount << " ";
-                        }
+                output << "# " << ix << "\n";
+                for(int iy = 0; iy < ny; ++iy){
+                    for(int iz = 0; iz < nz; ++iz){
+                        output << Contents[ix][iy][iz].TotalSQR << " ";
                     }
-                    output << line.str() << "\n";
+                    output << "\n";
                 }
             }
         }
-        void HistogramMap3D::PrintTotalSQR(std::ostream & output){
+        void Histogram3D::PrintTotal(std::ostream & output){
             for(int ix = 0; ix < nx; ++ix){
-                // centrality
-                 output << "# " << ix << " " << ContentsConverted[ix].size() << "\n";
-                for(const auto & entry : ContentsConverted[ix]){
-                    // pid
-                    std::stringstream line;
-                    line << std::setw(7) << std::right << entry.first << " ";
-                    for(int iy = 0; iy < ny; ++iy){
-                        // momentum
-                        for(int iz = 0; iz < nz; ++iz){
-                            // rapidity
-                            line << std::setw(15) << std::right << entry.second[iy][iz].TotalSQR << " ";
-                        }
+                output << "# " << ix << "\n";
+                for(int iy = 0; iy < ny; ++iy){
+                    for(int iz = 0; iz < nz; ++iz){
+                        output << Contents[ix][iy][iz].Total << " ";
                     }
-                    output << line.str() << "\n";
-                }
-            }
-        }
-        void HistogramMap3D::PrintTotal(std::ostream & output){
-            for(int ix = 0; ix < nx; ++ix){
-                // centrality
-                 output << "# " << ix << " " << ContentsConverted[ix].size() << "\n";
-                for(const auto & entry : ContentsConverted[ix]){
-                    // pid
-                    std::stringstream line;
-                    line << std::setw(7) << std::right << entry.first << " ";
-                    for(int iy = 0; iy < ny; ++iy){
-                        // momentum
-                        for(int iz = 0; iz < nz; ++iz){
-                            // rapidity
-                            line << std::setw(15) << std::right << entry.second[iy][iz].Total << " ";
-                        }
-                    }
-                    output << line.str() << "\n";
+                    output << "\n";
                 }
             }
         }
@@ -268,55 +245,45 @@ namespace AMPT {
 
 
 
-        StatisticsContainer & HistogramMap3D::operator()(int & ix, int & iy, int & iz, int & key){
-            return Contents[ix][iy][iz][key];
+        StatisticsContainer & Histogram3D::operator()(int & ix, int & iy, int & iz){
+            return Contents[ix][iy][iz];
         }   
 
-        Vector0DMap & HistogramMap3D::operator()(int & ix, int & iy, int & iz){
-            return Contents[ix][iy][iz];
-        }
-        Vector1DMap & HistogramMap3D::operator()(int & ix, int & iy){
+   
+        Vector1D & Histogram3D::operator()(int & ix, int & iy){
             return Contents[ix][iy];
         }
-        Vector2DMap & HistogramMap3D::operator()(int & ix){
+        Vector2D & Histogram3D::operator()(int & ix){
             return Contents[ix];
         }
 
-        StatisticsContainer & HistogramMap3D::operator()(double & valx, double & valy, double & valz, int & key){
-            
-            int ix = IndexMapX[static_cast<int>((valx - x_min)/(x_width))];
-            int iy = IndexMapY[static_cast<int>((valy - y_min)/(y_width))];
-            int iz = IndexMapZ[static_cast<int>((valz - z_min)/(z_width))];
 
-            
-            return Contents[ix][iy][iz][key];
-        }   
 
-        Vector0DMap & HistogramMap3D::operator()(double & valx, double & valy, double & valz){
+        StatisticsContainer & Histogram3D::operator()(double & valx, double & valy, double & valz){
             int ix = IndexMapX[static_cast<int>((valx - x_min)/(x_width))];
             int iy = IndexMapY[static_cast<int>((valy - y_min)/(y_width))];
             int iz = IndexMapZ[static_cast<int>((valz - z_min)/(z_width))];
             return Contents[ix][iy][iz];
         }
-        Vector1DMap & HistogramMap3D::operator()(double & valx, double & valy){
+        Vector1D & Histogram3D::operator()(double & valx, double & valy){
             int ix = IndexMapX[static_cast<int>((valx - x_min)/(x_width))];
             int iy = IndexMapY[static_cast<int>((valy - y_min)/(y_width))];
             return Contents[ix][iy];
         }
-        Vector2DMap & HistogramMap3D::operator()(double & valx){
+        Vector2D & Histogram3D::operator()(double & valx){
             int ix = IndexMapX[static_cast<int>((valx - x_min)/(x_width))];
             return Contents[ix];
         }
 
 
-        void HistogramMap3D::operator+=(HistogramMap3D const & obj){
+        void Histogram3D::operator+=(Histogram3D const & obj){
             if(nx == obj.nx && ny == obj.ny && nz == obj.nz){
                 for(int ix = 0; ix < nx; ++ix){
                     for(int iy = 0; iy < ny; ++iy){
                         for(int iz = 0; iz < nz; ++iz){
-                            for(auto entry : obj.Contents[ix][iy][iz]){
-                                Contents[ix][iy][iz][entry.first] += entry.second;
-                            }
+                           
+                                Contents[ix][iy][iz] += obj.Contents[ix][iy][iz];
+                            
                             
                         }
                     }

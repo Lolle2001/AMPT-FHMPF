@@ -1,0 +1,73 @@
+#ifndef HISTOGRAM1D_HPP
+#define HISTOGRAM1D_HPP
+
+#include "StatisticsContainer.hpp"
+#include "AMPT_functions.hpp"
+#include <vector>
+#include <map>
+
+using PP = AMPT::Functions::PretyPrint;
+
+namespace AMPT {
+    namespace Statistics {
+
+         using Vector1D = std::vector<StatisticsContainer>;
+
+
+         class Histogram1D {
+            private:
+            Vector1D Contents;
+
+            int nx, ny, nz;
+
+            std::map < int, int > IndexMapX;
+          
+            double x_max;
+            double x_min;
+            double x_width;
+  
+
+            std::vector<double> EdgesX;
+            
+            public:
+            Histogram1D(){};
+            Histogram1D(int & nx_);
+            Histogram1D(std::vector<double> EdgesX_);
+
+            void Resize(int & nx_);
+
+            void InitializeIndexMap();
+
+            void AddEvent();
+
+            void Add(double & valx, double valcontent);
+
+            void AddCurrent(double & valx, double valcontent);
+
+            void PrintCount(std::ostream & output);
+
+            void PrintTotalSQR(std::ostream & output);
+
+            void PrintTotal(std::ostream & output);
+
+            
+            
+            StatisticsContainer & operator()(int & ix);
+
+
+            StatisticsContainer & operator()(double & valx);
+
+
+            void operator+=(Histogram1D const & obj);
+
+
+
+        };
+    }
+}
+
+
+
+
+
+#endif

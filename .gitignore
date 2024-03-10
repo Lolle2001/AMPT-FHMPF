@@ -6,6 +6,7 @@ input/*
 token
 include/new
 include/old
-
+plots
 !input/default.par
 !input/test.par
+pdg

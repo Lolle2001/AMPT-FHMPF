@@ -7,6 +7,17 @@ namespace AMPT {
         // void Concatenate(std::vector<T> &v1, const std::vector<T> &v2){
         //     v1.insert(std::end(v1), std::begin(v2), std::end(v2));
         // };
+        double igcd(double a, double b, double base){
+            if (a < b){
+                return igcd(b, a, base);
+            }
+            if (std::fabs(b) < base){
+                return a;
+            }
+            else {
+                return (igcd(b, a - std::floor(a / b) * b, base));
+            }
+        }
 
         std::vector<std::string> Extract(const std::string& Text) {
             std::vector<std::string> Words;
