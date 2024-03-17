@@ -13,7 +13,7 @@ namespace AMPT {
     void File_ampt::Parse(){
         #pragma omp critical
         {
-        printf("%s%s%s ", PP::started, "[INFO]", PP::end);
+        printf("%s%s%s ", PP::STARTED, "[INFO]", PP::RESET);
         printf("%-17s : %s\n", "Parsing data from", FileDirectory.c_str());
         fflush(stdout);
         }
@@ -37,7 +37,7 @@ namespace AMPT {
             #pragma omp critical
             {
             
-            printf("%s%s%s ", PP::finished, "[INFO]", PP::end);
+            printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
             printf("%-17s : %s\n", "Parsed data from", FileDirectory.c_str());
             fflush(stdout);
             }
@@ -46,7 +46,7 @@ namespace AMPT {
         else{
             #pragma omp critical 
             {
-            printf("%s%s%s ", PP::warning, "[WARNING]", PP::end);
+            printf("%s%s%s ", PP::WARNING, "[WARNING]", PP::RESET);
             printf("%-17s : %s\n", "Cannot open file", FileDirectory.c_str());
             fflush(stdout);
             }
@@ -72,43 +72,48 @@ namespace AMPT {
 // [U] Add function that automatically determines NBatch.
 
 
-File_ampt * CombineAMPT(int NRun, int NBatchMin, int NBatchMax, std::string Directory, int NumberOfThreads){
-    printf("%s%s%s ", PP::started, "[INFO]", PP::end);
+File_ampt * CombineAMPT(int NRun, int NBatchMin, int NBatchMax, std::string Directory, int NumberOfThreads, int collisiontype){
+    printf("%s%s%s ", PP::STARTED, "[INFO]", PP::RESET);
     printf("%s : %d(%d)\n", "Reading data from run (size)", NRun, NBatchMax - NBatchMin + 1);
     fflush(stdout);
    
     
-    File_ampt * campt = new File_ampt();
+    File_ampt * campt = new File_ampt(collisiontype);
 
 
     File_ampt * data[50];
    
+    File_input * input;
     
 
     double FileSize = 0;
     for(int i = NBatchMin; i <= NBatchMax; ++i){
         FileSize += AMPT::Functions::GetFileSize(Directory + std::to_string(NRun)+ "/" + std::to_string(NRun) + "_" + std::to_string(i) + "/ana/ampt.dat", 3);
     }
-    printf("%s%s%s ", PP::started, "[INFO]", PP::end);
-    printf("%s : %s%.3f GB%s\n", "Total datasize to read", PP::highlight, FileSize, PP::end);
+    printf("%s%s%s ", PP::STARTED, "[INFO]", PP::RESET);
+    printf("%s : %s%.3f GB%s\n", "Total datasize to read", PP::HIGHLIGHT, FileSize, PP::RESET);
     fflush(stdout);
    
     int TotalNevent = 0;
 
     int nevent[50];
     for(int i = NBatchMin; i <= NBatchMax; ++i){
-        File_input * input = new File_input(Directory + std::to_string(NRun)+ "/" + std::to_string(NRun) + "_" + std::to_string(i) + "/ana/input.ampt");  
+        input = new File_input(Directory + std::to_string(NRun)+ "/" + std::to_string(NRun) + "_" + std::to_string(i) + "/ana/input.ampt");  
         input -> ReadFile();
         TotalNevent += input -> NEVENT;
         nevent[i] = input -> NEVENT;
-        delete input;
+        
     }
-    printf("%s%s%s ", PP::started, "[INFO]", PP::end);
-    printf("%s : %s%d%s\n", "Total datasize to read", PP::highlight, TotalNevent, PP::end);
+    printf("%s%s%s ", PP::STARTED, "[INFO]", PP::RESET);
+    printf("%s : %s%d%s\n", "Total datasize to read", PP::HIGHLIGHT, TotalNevent, PP::RESET);
     fflush(stdout);
+
+    // std::cout << input -> IAT << " " << input -> IZT << std::endl;
   
     for(int i = NBatchMin; i <= NBatchMax; ++i){    
-        data[i] = new File_ampt(Directory + std::to_string(NRun) + "/" + std::to_string(NRun) + "_" + std::to_string(i) + "/ana/ampt.dat", nevent[i]);
+        data[i] = new File_ampt(Directory + std::to_string(NRun) + "/" + std::to_string(NRun) + "_" + std::to_string(i) + "/ana/ampt.dat", nevent[i], input, collisiontype);
+        // data[i] -> Data.SetParameters(input);
+        // data[i] -> Data.InitializeHistograms();
     }
 
     TimePoint_u start = Clock_u::now();
@@ -121,8 +126,8 @@ File_ampt * CombineAMPT(int NRun, int NBatchMin, int NBatchMax, std::string Dire
     }
     TimePoint_u stop = Clock_u::now();
     AMPT::Functions::Duration duration(start, stop, 'M');
-    printf("%s%s%s ", PP::finished, "[INFO]", PP::end);
-    printf("%s : %s%03ld:%02ld.%03ld%s\n", "Reading time", PP::highlight, duration.cminutes, duration.cseconds, duration.cmilliseconds, PP::end);
+    printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+    printf("%s : %s%03ld:%02lld.%03lld%s\n", "Reading time", PP::HIGHLIGHT, duration.cminutes, duration.cseconds, duration.cmilliseconds, PP::RESET);
     fflush(stdout);
   
     for(int i = NBatchMin; i <= NBatchMax; ++i){      
@@ -141,9 +146,20 @@ File_ampt * CombineAMPT(int NRun, int NBatchMin, int NBatchMax, std::string Dire
 
     TimePoint_u stop2 = std::chrono::high_resolution_clock::now();
     AMPT::Functions::Duration duration2(start2, stop2, 'M');
-    printf("%s%s%s ", PP::finished, "[INFO]", PP::end);
-    printf("%s : %s%03ld:%02ld.%03ld%s\n", "Writing time", PP::highlight, duration2.cminutes, duration2.cseconds, duration2.cmilliseconds, PP::end);
+    long double totalsize = 0;
+    std::filesystem::recursive_directory_iterator datadirectory_iter(datadirectory.str());
+     for(const auto & entry : datadirectory_iter){
+        totalsize += Functions::GetFileSize(entry.path(), 2);
+        // std::cout <<  << std::endl;
+    }
+    
+    printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+    printf("%s : %s%03ld:%02lld.%03lld%s\n", "Writing time", PP::HIGHLIGHT, duration2.cminutes, duration2.cseconds, duration2.cmilliseconds, PP::RESET);
     fflush(stdout);
+    printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+    printf("%s : %s%.3Lf MB%s\n", "Total datasize written", PP::HIGHLIGHT, totalsize, PP::RESET);
+    fflush(stdout);
+
   
     return campt;
 
@@ -151,10 +167,10 @@ File_ampt * CombineAMPT(int NRun, int NBatchMin, int NBatchMax, std::string Dire
 
 AMPT::File_ampt * ReadAMPT(int NRun, std::string Directory){
     
-    std::cout << PP::started << "[AMPT::File_ampt]" << PP::end << " ";
+    std::cout << PP::STARTED << "[AMPT::File_ampt]" << PP::RESET << " ";
     std::cout << "Reading processed data from run: " << NRun << std::endl; 
     
-    AMPT::File_ampt * ampt = new AMPT::File_ampt();
+    AMPT::File_ampt * ampt = new AMPT::File_ampt(0);
     std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
     // ampt -> ReadSettings(Directory + std::to_string(NRun) + "/processed/ampt_settings.dat");
     // ampt -> InitializeBins();
@@ -168,8 +184,8 @@ AMPT::File_ampt * ReadAMPT(int NRun, std::string Directory){
     // ampt -> ReadEventInfo(Directory  + std::to_string(NRun) + "/processed/ampt_eventinfo.dat");
     std::chrono::time_point<std::chrono::high_resolution_clock> stop = std::chrono::high_resolution_clock::now();
     AMPT::Functions::Duration duration(start, stop, 'M');
-    std::cout << PP::finished << "[AMPT::File_ampt]" << PP::end << " ";
-    std::cout << "Reading time [m:s:ms]: " << PP::highlight << duration.cminutes << ":" << std::setw(2) << std::setfill('0') << duration.cseconds << ":" << std::setw(3) << std::setfill('0') << duration.cmilliseconds << PP::end << std::endl;
+    std::cout << PP::FINISHED << "[AMPT::File_ampt]" << PP::RESET << " ";
+    std::cout << "Reading time [m:s:ms]: " << PP::HIGHLIGHT << duration.cminutes << ":" << std::setw(2) << std::setfill('0') << duration.cseconds << ":" << std::setw(3) << std::setfill('0') << duration.cmilliseconds << PP::RESET << std::endl;
     return ampt;
 }
 

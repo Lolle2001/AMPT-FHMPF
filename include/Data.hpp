@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "ParticleProperties.hpp"
+#include "AMPT_input.hpp"
 #include "HistogramMap.hpp"
 #include "Histogram1D.hpp"
 #include "Histogram3D.hpp"
@@ -25,7 +26,7 @@
 #define DEFAULT_NAME_EVENTINFO "eventinfo"
 #define DEFAULT_NAME_CENTRALITYINFO "centralityinfo"
 
-namespace AMPT {
+// namespace AMPT {
     namespace Statistics {
 
         // Optimization: instead of outputting multiple count files or storing multiple counts,
@@ -38,14 +39,14 @@ namespace AMPT {
             // std::vector<Block_ampt> EventBlocks;
             // std::vector<
 
-            HistogramMap3D AnisotropicFlow[6];
-            HistogramMap3D Yield;
-            HistogramMap3D TransverseMomentum;
+            Statistics::HistogramMap3D AnisotropicFlow[6];
+            Statistics::HistogramMap3D Yield;
+            Statistics::HistogramMap3D TransverseMomentum;
 
-            Histogram1D Centrality;
+            Statistics::Histogram1D Centrality;
 
 
-            std::vector<Block_ampt> EventBlocks;
+            std::vector<AMPT::Block_ampt> EventBlocks;
             int NumberOfBlocks = 0;
             // HistogramMap3D Rapidity;
             // HistogramMap3D PseudoRapidity;
@@ -64,23 +65,24 @@ namespace AMPT {
 
 
 
-            std::map<std::string, std::unique_ptr<Histogram1D>> centrality_custom;
+            std::map<std::string, std::unique_ptr<Statistics::Histogram1D>> centrality_custom;
             std::map<std::string, std::vector<double>> centrality_edges_custom;
             std::map<std::string, std::vector<double>> rapidity_edges_custom;
             std::map<std::string, std::vector<double>> momentum_edges_custom;
 
 
-            std::map<std::string, std::unique_ptr<Histogram3D>> histograms_custom;
+            std::map<std::string, std::unique_ptr<Statistics::Histogram3D>> histograms_custom;
 
             std::map<std::string, std::string> filenames_custom;
 
 
-
+            // File_input * parameters;
             
             int nharmonic_min = 1;
             int nharmonic_max = 5;
 
             
+              std::string centrality_key = "1:PbPb5020";
 
             public:
 
@@ -96,15 +98,19 @@ namespace AMPT {
 
             void SetupCustomHistograms();
 
+            void SetCentralityKey(std::string x){
+            centrality_key = x;
+            }
+
             // void AddEvent(Block_ampt & block);
 
-            void AddParticle(double & b, Line_ampt & line);
+            void AddParticle(double & b, AMPT::Line_ampt & line);
 
-            void AddParticleCustom(double & b, Line_ampt & line);
+            void AddParticleCustom(double & b, AMPT::Line_ampt & line);
 
-            void AddEvent(Block_ampt & block);
+            void AddEvent(AMPT::Block_ampt & block);
 
-            void AddEventCustom(Block_ampt & block);
+            void AddEventCustom(AMPT::Block_ampt & block);
 
             void WriteData(std::string directory);
 
@@ -120,14 +126,15 @@ namespace AMPT {
 
             void AddCustom(Data_ampt  const & obj);
 
+            // void SetParameters(File_input * input);
+
+
             void operator+=(Data_ampt const & obj);
             
          
             
         };
 
-
     }
-}
 
 #endif

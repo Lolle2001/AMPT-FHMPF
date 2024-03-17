@@ -40,6 +40,7 @@ namespace AMPT
         Statistics::Data_ampt Data;
 
         int ExpectedNumberOfEvents = 0;
+        // std::unique_ptr<File_input> parameters;
 
         File_ampt(std::string FileDirectory_) : FileDirectory(FileDirectory_)
         {
@@ -51,9 +52,42 @@ namespace AMPT
             InitializeBins();
         };
 
-        File_ampt()
+        File_ampt(std::string FileDirectory_, unsigned int ExpectedNumberOfEvents_, File_input * input, int collisiontype) : FileDirectory(FileDirectory_){
+            Data = Statistics::Data_ampt(1, 5);
+            Data.ReserveEventBlocks(ExpectedNumberOfEvents_);
+            // Data.SetParameters(input);
+            if(collisiontype == 0){
+                Data.SetCentralityKey("1:PbPb5020");
+            }
+            else if(collisiontype == 1){
+                Data.SetCentralityKey("1:pPb5020");
+            }
+            else if(collisiontype == 2){
+                Data.SetCentralityKey("1:pp5020");
+            }
+            else{
+                Data.SetCentralityKey("1:PbPb5020");
+            }
+            Data.InitializeHistograms();
+        }
+        
+
+        File_ampt(int collisiontype)
         {
-            InitializeBins();
+            Data = Statistics::Data_ampt(1, 5);
+            if(collisiontype == 0){
+                Data.SetCentralityKey("1:PbPb5020");
+            }
+            else if(collisiontype == 1){
+                Data.SetCentralityKey("1:pPb5020");
+            }
+            else if(collisiontype == 2){
+                Data.SetCentralityKey("1:pp5020");
+            }
+            else{
+                Data.SetCentralityKey("1:PbPb5020");
+            }
+            Data.InitializeHistograms();
         };
 
         void InitializeBins();
@@ -92,7 +126,7 @@ namespace AMPT
     };
 
     
-    File_ampt *CombineAMPT(int NRun, int NBatchMin, int NBatchMax, std::string Directory, int NumberOfThreads);
+    File_ampt *CombineAMPT(int NRun, int NBatchMin, int NBatchMax, std::string Directory, int NumberOfThreads, int collisiontype);
 
     AMPT::File_ampt *ReadAMPT(int NRun, std::string Directory);
 

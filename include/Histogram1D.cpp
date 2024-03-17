@@ -1,5 +1,5 @@
 #include "Histogram1D.hpp"
-namespace AMPT {
+// namespace AMPT {
     namespace Statistics {
 
 
@@ -124,8 +124,8 @@ namespace AMPT {
                 }
             }
             else{
-                printf("%s%s%s ", PP::warning, "[WARNING]", PP::end);
-                printf("%s", "Cannot add two HistogramMaps of different sizes!");
+                printf("%s%s%s ", PP::WARNING, "[WARNING]", PP::RESET);
+                printf("%s\n", "Cannot add two HistogramMaps of different sizes!");
             }
         }
 
@@ -149,5 +149,89 @@ namespace AMPT {
                 output << Contents[ix].TotalSQR << "\n";
             }
         }
+
+        void Histogram1D::PrintEdges(std::ostream & output){
+            output << "nbins(x) = " << nx << "\n";
+            output << "edges(x) = ";
+            for(int ix = 0; ix <= nx; ++ix){
+                output << EdgesX[ix] << " ";
+            }
+            output << "\n";
+          
+
+        }
+         void Histogram1D::ReadEdges(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+            std::string dummy1;
+            std::string dummy2;
+            std::string dummy3;
+            double edge;
+            file.open(filename, std::ios::in);
+            
+            
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2 >> nx;
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2;
+       
+            
+            while(iss >> edge){
+               
+                EdgesX.push_back(edge);
+            }
+
+            file.close();
+            Resize(nx);
+            InitializeIndexMap();
+        }
+        void Histogram1D::ReadTotalSQR(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+            std::string dummy1;
+            double value;
+            
+            file.open(filename, std::ios::in);
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                iss = std::istringstream(line);
+                iss >> dummy1 >> Contents[ix].TotalSQR;
+            }
+        }
+        void Histogram1D::ReadTotal(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+            std::string dummy1;
+            double value;
+            
+            file.open(filename, std::ios::in);
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                iss = std::istringstream(line);
+                iss >> dummy1 >> Contents[ix].Total;
+            }
+        }
+        void Histogram1D::ReadCount(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+            std::string dummy1;
+            double value;
+            
+            file.open(filename, std::ios::in);
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                iss = std::istringstream(line);
+                iss >> dummy1 >> Contents[ix].EntryCount;
+            }
+        }
     }
-}
+// }

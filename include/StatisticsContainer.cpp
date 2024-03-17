@@ -1,7 +1,7 @@
 #include "StatisticsContainer.hpp"
 
 
-namespace AMPT {
+// namespace AMPT {
     namespace Statistics {
          void StatisticsContainer::Add(long double value){
             Total      += value;
@@ -141,4 +141,4 @@ namespace AMPT {
             return output;
         }
     }
-}
+// }

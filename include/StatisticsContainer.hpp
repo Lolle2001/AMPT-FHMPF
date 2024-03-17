@@ -1,11 +1,11 @@
  #ifndef STATISTICSCONTAINER_HPP
  #define STATISTICSCONTAINER_HPP
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 
- namespace AMPT {
+//  namespace AMPT {
     namespace Statistics {
  
  
@@ -61,6 +61,6 @@
     };
     
     }
- }
+//  }
 
  #endif

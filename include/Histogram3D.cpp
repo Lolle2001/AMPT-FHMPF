@@ -1,6 +1,6 @@
 #include "Histogram3D.hpp"
 
-namespace AMPT {
+// namespace AMPT {
     namespace Statistics {
 
 
@@ -290,10 +290,125 @@ namespace AMPT {
                 }
             }
             else{
-                printf("%s%s%s ", PP::warning, "[WARNING]", PP::end);
-                printf("%s", "Cannot add two HistogramMaps of different sizes!");
+                printf("%s%s%s ", PP::WARNING, "[WARNING]", PP::RESET);
+                printf("%s\n", "Cannot add two HistogramMaps of different sizes!");
             }
         }
 
+
+        void Histogram3D::ReadEdges(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+            std::string dummy1;
+            std::string dummy2;
+            std::string dummy3;
+            double edge;
+            file.open(filename, std::ios::in);
+            
+            
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2 >> nx;
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2;
+       
+            
+            while(iss >> edge){
+               
+                EdgesX.push_back(edge);
+            }
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2 >> ny;
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+            
+            iss >> dummy1 >> dummy2;
+            
+            while(iss >> edge){
+                EdgesY.push_back(edge);
+            }
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+             iss >> dummy1 >> dummy2 >> nz;
+
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+            
+            iss >> dummy1 >> dummy2;
+
+            while(iss >> edge){
+                EdgesZ.push_back(edge);
+            }
+
+            file.close();
+            Resize(nx, ny, nz);
+            InitializeIndexMap();
+        }
+        void Histogram3D::ReadTotalSQR(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+           
+            file.open(filename, std::ios::in);
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                for(int iy = 0; iy < ny; ++iy){
+                    std::getline(file, line);
+                    iss = std::istringstream(line);
+                    for(int iz = 0; iz < nz; ++iz){
+                        iss >> Contents[ix][iy][iz].TotalSQR;
+                    }
+                }
+            }
+        }
+        void Histogram3D::ReadTotal(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+           
+            file.open(filename, std::ios::in);
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                for(int iy = 0; iy < ny; ++iy){
+                    std::getline(file, line);
+                    iss = std::istringstream(line);
+                    for(int iz = 0; iz < nz; ++iz){
+                        iss >> Contents[ix][iy][iz].Total;
+                    }
+                }
+            }
+        }
+        void Histogram3D::ReadCount(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+           
+            file.open(filename, std::ios::in);
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                for(int iy = 0; iy < ny; ++iy){
+                    std::getline(file, line);
+                    iss = std::istringstream(line);
+                    for(int iz = 0; iz < nz; ++iz){
+                        iss >> Contents[ix][iy][iz].EntryCount;
+                    }
+                }
+            }
+        }
+
+
+
     }
-}
+// }

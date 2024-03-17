@@ -269,14 +269,54 @@ if __name__=="__main__":
     # par3.parameterdict["XMU"] = [3.2]
     # par3.parameterdict["PARJ_41"] = [0.3]
     # par3.parameterdict["PARJ_42"] = [0.15]
+
+
     par3.parameterdict["NEVENT"] = [100]
     par3.parameterdict["BMIN"] = [8.55]
     par3.parameterdict["BMAX"] = [9.87]
     par3.parameterdict["ISOFT"] = [1]
     par3.Write(runnumber=4)
 
-    tabulate([4000])
+# 0.00, 3.49, 4.93, 6.98, 8.55, 9.87, 11.00, 12.10,  13.10, 14.00, 14.90, 20.00
+    par5000 = AMPT_parameters(2)
+    par5000.parameterdict["IHPR2_4"] = [0, 0]
+    par5000.parameterdict["NEVENT"]  = [100, 10]
+    par5000.parameterdict["BMIN"]    = [0,  0]
+    par5000.parameterdict["BMAX"]    = [20, 20]
+    par5000.parameterdict["ISOFT"] = [4, 1]    
+    par5000.Write(runnumber=5)
+
+    par4 = AMPT_parameters(1)
+    par4.parameterdict["PROJ"] = ["P"]
+    par4.parameterdict["IAP"] = [1]
+    par4.parameterdict["IZP"] = [1]
+    par4.parameterdict["TARG"] = ["P"]
+    par4.parameterdict["IAT"] = [1]
+    par4.parameterdict["IZT"] = [1]
+    par4.parameterdict["NEVENT"] = [100]
+    par4.parameterdict["BMIN"] = [8.55]
+    par4.parameterdict["BMAX"] = [9.87]
+    par4.Write(runnumber=10)
+
+    par5 = AMPT_parameters(1)
+    par5.parameterdict["PROJ"] = ["P"]
+    par5.parameterdict["IAP"] = [1]
+    par5.parameterdict["IZP"] = [1]
+    par5.parameterdict["TARG"] = ["A"]
+    par5.parameterdict["NEVENT"] = [100]
+    par5.parameterdict["BMIN"] = [4.47]
+    par5.parameterdict["BMAX"] = [5.16]
+    par5.Write(runnumber=11)
+
+    par6 = AMPT_parameters(1)
+    par6.parameterdict["NEVENT"] = [1]
+    par6.parameterdict["BMIN"] = [8.55]
+    par6.parameterdict["BMAX"] = [9.87]
+    par6.Write(runnumber=12)
+
+
+    tabulate([5000, 5001])
     
     
-    write_job_script([4000])
+    write_job_script([5000, 5001], binmin = 1, binmax = 20)
     

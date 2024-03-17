@@ -337,11 +337,11 @@ namespace AMPT {
                 File << std::setw(30) << std::left << ExtractedParameters[i] ;
                 File << "! " << ParameterKeys[i] << std::endl;
             }
-            std::cout << PP::finished << "[AMPT::File_input]" << PP::end << " ";
+            std::cout << PP::FINISHED << "[AMPT::File_input]" << PP::RESET << " ";
             std::cout << "Written input to: " << Filename << std::endl;
         }
         else{
-            std::cout << PP::warning << "[AMPT::File_input]" << PP::end << " ";
+            std::cout << PP::WARNING << "[AMPT::File_input]" << PP::RESET << " ";
             std::cout << "Cannot open file: " << Filename << std::endl;
         }
         File.close();
@@ -356,11 +356,11 @@ namespace AMPT {
                 File << ExtractedParameters[i] << "\t";
             }
             File.flush();
-            std::cout << PP::finished << "[AMPT::File_input]" << PP::end << " ";
+            std::cout << PP::FINISHED << "[AMPT::File_input]" << PP::RESET << " ";
             std::cout << "Written input to: " << Filename << std::endl;
         }
         else{
-            std::cout << PP::warning << "[AMPT::File_input]" << PP::end << " ";
+            std::cout << PP::WARNING << "[AMPT::File_input]" << PP::RESET << " ";
             std::cout << "Cannot open file: " << Filename << std::endl;
         }
         File.close();
@@ -379,11 +379,11 @@ namespace AMPT {
             }
             FormatParametersSummary();
             // FormatParameters();
-            std::cout << PP::finished << "[AMPT::File_input]" << PP::end << " ";
+            std::cout << PP::FINISHED << "[AMPT::File_input]" << PP::RESET << " ";
             std::cout << "Read input from: " << Filename << std::endl;
         }
         else{
-            std::cout << PP::warning << "[AMPT::File_input]" << PP::end << " ";
+            std::cout << PP::WARNING << "[AMPT::File_input]" << PP::RESET << " ";
             std::cout << "Cannot open file: " << Filename << std::endl;
         }
         File.close();
@@ -430,7 +430,7 @@ File_input * Combine_file_input(int NRun, int NBatchMin, int NBatchMax, std::str
 
 File_input * Read_file_input(int NRun, std::string Directory){
     
-    std::cout << PP::started << "[AMPT::File_input]" << PP::end << " ";
+    std::cout << PP::STARTED << "[AMPT::File_input]" << PP::RESET << " ";
     std::cout << "Reading input data from run: " << NRun << std::endl; 
     File_input * cinput = new File_input();
     std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
@@ -438,8 +438,8 @@ File_input * Read_file_input(int NRun, std::string Directory){
     cinput -> NRun = NRun;
     std::chrono::time_point<std::chrono::high_resolution_clock> stop = std::chrono::high_resolution_clock::now();
     AMPT::Functions::Duration duration(start, stop, 'M');
-    std::cout << PP::finished << "[AMPT::File_input]" << PP::end << " ";
-    std::cout << "Reading time [m:s:ms]: " << PP::highlight << duration.cminutes << ":" << std::setw(2) << std::setfill('0') << duration.cseconds << ":" << std::setw(3) << std::setfill('0') << duration.cmilliseconds << PP::end << std::endl;
+    std::cout << PP::FINISHED << "[AMPT::File_input]" << PP::RESET << " ";
+    std::cout << "Reading time [m:s:ms]: " << PP::HIGHLIGHT << duration.cminutes << ":" << std::setw(2) << std::setfill('0') << duration.cseconds << ":" << std::setw(3) << std::setfill('0') << duration.cmilliseconds << PP::RESET << std::endl;
     return cinput;
 }
 

@@ -1,6 +1,6 @@
 #include "HistogramMap.hpp"
 
-namespace AMPT {
+// namespace AMPT {
     namespace Statistics {
 
 
@@ -323,10 +323,10 @@ namespace AMPT {
                 }
             }
             else{
-                printf("%s%s%s ", PP::warning, "[WARNING]", PP::end);
-                printf("%s", "Cannot add two HistogramMaps of different sizes!");
+                printf("%s%s%s ", PP::WARNING, "[WARNING]", PP::RESET);
+                printf("%s\n", "Cannot add two HistogramMaps of different sizes!");
             }
         }
 
     }
-}
+// }

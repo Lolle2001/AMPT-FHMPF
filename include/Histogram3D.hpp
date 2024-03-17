@@ -15,7 +15,7 @@
 
 using PP = AMPT::Functions::PretyPrint;
 
-namespace AMPT {
+// namespace AMPT {
     namespace Statistics {
         using Vector3DMap = std::vector<std::vector<std::vector<std::map<int, StatisticsContainer>>>>;
         using Vector2DMap = std::vector<std::vector<std::map<int, StatisticsContainer>>>;
@@ -76,7 +76,10 @@ namespace AMPT {
             void PrintTotal(std::ostream & output);
             void PrintCount(std::ostream & output);
 
-            
+            void ReadEdges(std::string filename);
+            void ReadTotalSQR(std::string filename);
+            void ReadTotal(std::string filename);
+            void ReadCount(std::string filename);
             
             
             StatisticsContainer & operator()(int & ix, int & iy, int & iz);
@@ -97,7 +100,7 @@ namespace AMPT {
 
 
     }
-}
+// }
 
 
 

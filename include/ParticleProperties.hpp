@@ -3,7 +3,7 @@
 
 #include <map>
 
-namespace AMPT{
+namespace Statistics {
 
 extern std::map<int, int> ChargeMap;
 }

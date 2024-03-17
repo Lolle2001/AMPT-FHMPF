@@ -8,7 +8,7 @@
 
 using PP = AMPT::Functions::PretyPrint;
 
-namespace AMPT {
+// namespace AMPT {
     namespace Statistics {
 
          using Vector1D = std::vector<StatisticsContainer>;
@@ -50,6 +50,12 @@ namespace AMPT {
 
             void PrintTotal(std::ostream & output);
 
+            void PrintEdges(std::ostream & output);
+
+            void ReadEdges(std::string filename);
+            void ReadTotalSQR(std::string filename);
+            void ReadTotal(std::string filename);
+            void ReadCount(std::string filename);
             
             
             StatisticsContainer & operator()(int & ix);
@@ -64,7 +70,7 @@ namespace AMPT {
 
         };
     }
-}
+// }
 
 
 

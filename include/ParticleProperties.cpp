@@ -3,7 +3,7 @@
 
 
 
-namespace AMPT{
+namespace Statistics{
 
 std::map<int, int> ChargeMap = {
 			{   -910213, -1},
