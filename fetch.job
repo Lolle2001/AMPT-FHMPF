@@ -1,0 +1,12 @@
+bash server/fetchfromserver.sh $1 2000
+bash server/fetchfromserver.sh $1 2001
+bash server/fetchfromserver.sh $1 2002
+bash server/fetchfromserver.sh $1 2003
+bash server/fetchfromserver.sh $1 2004
+# bash server/fetchfromserver.sh $1 3000
+bash server/fetchfromserver.sh $1 3001
+bash server/fetchfromserver.sh $1 3002
+bash server/fetchfromserver.sh $1 3003
+bash server/fetchfromserver.sh $1 3004
+bash server/fetchfromserver.sh $1 3005
+bash server/fetchfromserver.sh $1 4000

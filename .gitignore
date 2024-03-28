@@ -1,6 +1,7 @@
 data
 output
 bin
+include
 input/*
 .vscode
 token
@@ -12,3 +13,14 @@ plots
 pdg
 build
 utils/__pycache__
+CMakelists.txt
+Makefile
+process.job
+utils/process.sh
+include/Data.cpp
+include/Histogram3D.cpp
+include/HistogramMap.hpp
+include/HistogramMap.cpp
+include/Histogram3D.hpp
+include/Histogram1D.cpp
+include/Data.hpp

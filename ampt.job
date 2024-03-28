@@ -1,12 +1,3 @@
 #!/bin/bash
-bash rampt.sh 3000.par 3000 1 20
-bash rampt.sh 3001.par 3001 1 20
-bash rampt.sh 3002.par 3002 1 20
-bash rampt.sh 3003.par 3003 1 20
-bash rampt.sh 3004.par 3004 1 20
-bash rampt.sh 3005.par 3005 1 20
-bash rampt.sh 2000.par 2000 1 20
-bash rampt.sh 2001.par 2001 1 20
-bash rampt.sh 2002.par 2002 1 20
-bash rampt.sh 2003.par 2003 1 20
-bash rampt.sh 2004.par 2004 1 20
+bash rampt.sh 5000.par 5000 1 20
+bash rampt.sh 5001.par 5001 1 20

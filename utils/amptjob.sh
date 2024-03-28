@@ -1,18 +1,24 @@
 #!/bin/bash
+INPUT=$1 # Name of input file
+RUNNUMBER=$2 # Number given to job
+BINMIN=$3 # Minimum bin number in which job is ran
+BINMAX=$4 # Maximum bin number in which job is ran
 
-INPUT=$1
-RUNNUMBER=$2
-BINMIN=$3
-BINMAX=$4
-
+# This file defines the directories in which
+# the executables are located, where the inputs are stored
+# and where the data is stored.
 source $(dirname $0)/directories.sh
+# This file has some user functions to give some 
+# information on the duration of a job. Jobs are ran
+# on a linus laptop and mac server, which have 
+# different ways of measuring time.
 source $(dirname $0)/timer.sh
 
 STARTDATE_S=$(cdate +%s%N)
 STARTDATE_L=$(cdate)
 
-SEVENT=$(sed '9q;d' $INPUTFOLDER/$INPUT | awk '{print $1}')
-NEVENT=$(($SEVENT * ($BINMAX-$BINMIN+1)))
+SEVENT=$(sed '9q;d' $INPUTFOLDER/$INPUT | awk '{print $1}') # Number of events in a single bin
+NEVENT=$(($SEVENT * ($BINMAX-$BINMIN+1))) # Total number of events
 
 printf "╭────────────────────────────────────────────────────────────────────────╮\n"
 printf "│ %-70s │\n" "AMPT Multiprocesser"                                        
@@ -29,10 +35,18 @@ printf "│ Starting Time    : %-51s │\n" "$STARTDATE_L"
 printf "├────────────────────────────────────────────────────────────────────────┤\n"
 
 
+# If there is a data folder with the same name as the runnumber,
+# it will be deleted and recreated. This is done to make sure
+# that there is no error in the data.
 rm -rf $DATAFOLDER/$RUNNUMBER
 mkdir -p $DATAFOLDER/$RUNNUMBER
 
-
+# In this for loop the jobs are ran. The jobs are ran in parallel,
+# so that the time needed for the jobs is minimized. It first removes
+# any old data in the bin directories and creates subfolders in the 
+# data directory. It copies the input file to the bin directories and
+# then runs the job. The jobs are ran in the background, so that
+# the script can continue.
 for BINID in $(seq $BINMIN $BINMAX)
 do
     I=$(($BINID - $BINMIN + 1))
@@ -41,12 +55,15 @@ do
     mkdir -p "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I"
     # cp "$INPUTFOLDER/$INPUT" "$DATAFOLDER/$RUNNUMBER/$RUNNUMBER""_""$I/input.par"
     cp "$INPUTFOLDER/$INPUT" "$BINFOLDER/ampt_$BINID/input.ampt"
+    # The amptsinglejob.sh runs one single bin. It allows for timing a single bin,
+    # and makes sure a random seed is used for the ZPC. It also takes into account
+    # that shell script works a bit different on a mac server.
     bash "$UTILSFOLDER/amptsinglejob.sh" $I $BINID $RUNNUMBER &
-    # sleep 1
+    # The sleep command makes sure that the jobs are starting with different HIJING seeds.
+    sleep 1
 done
-
-
-
+# Before any copying is done, all jobs must be finished. Otherwise there will be clogging
+# and the multiprocessing will not work properly.
 wait
 for BINID in $(seq $BINMIN $BINMAX)
 do
@@ -74,5 +91,3 @@ printf "│ Ending Time      : %-51s │\n" "$ENDDATE_L"
 printf "│ Elapsed Time     : %-51s │\n" "$DURATION_STR"     
 printf "│ Time per event   : %-51s │\n" "$DURATION_STR_EVENT"     
 printf "╰────────────────────────────────────────────────────────────────────────╯\n"
-
-# tput bel
