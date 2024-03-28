@@ -69,11 +69,78 @@ using PP = AMPT::Functions::PretyPrint;
 
             void Convert();
 
+            void PrintEdges(std::ostream & output);
             void PrintTotalSQR(std::ostream & output);
             void PrintTotal(std::ostream & output);
             void PrintCount(std::ostream & output);
 
+            void ReadEdges(std::string filename);
+            void ReadTotalSQR(std::string filename);
+            void ReadTotal(std::string filename);
+            void ReadCount(std::string filename);
             
+            int GetNbinsX(){return nx;};
+            int GetNbinsY(){return ny;};
+            int GetNbinsZ(){return nz;};
+
+            double GetBinWidthX(int ix){
+                if(ix < nx){
+                    return (EdgesX[ix+1] - EdgesX[ix]);
+                }
+                else{
+                    return 0;
+                }
+            }
+            double GetBinWidthY(int iy){
+                if(iy < ny){
+                    return (EdgesY[iy+1] - EdgesY[iy]);
+                }
+                else{
+                    return 0;
+                }
+            }
+            double GetBinWidthZ(int iz){
+                if(iz < nz){
+                    return (EdgesZ[iz+1] - EdgesZ[iz]);
+                }
+                else{
+                    return 0;
+                }
+            }
+            double GetBinMidX(int ix){
+                if(ix < nx){
+                    return (EdgesX[ix+1] + EdgesX[ix])/2;
+                }
+                else{
+                    return 0;
+                }
+            }
+            double GetBinMidY(int iy){
+                if(iy < ny){
+                    return (EdgesY[iy+1] + EdgesY[iy])/2;
+                }
+                else{
+                    return 0;
+                }
+            }
+            double GetBinMidZ(int iz){
+                if(iz < nz){
+                    return (EdgesZ[iz+1] + EdgesZ[iz])/2;
+                }
+                else{
+                    return 0;
+                }
+            }
+
+            std::vector<double> GetEdgesX(){
+                return EdgesX;
+            }
+             std::vector<double> GetEdgesY(){
+                return EdgesY;
+            }
+             std::vector<double> GetEdgesZ(){
+                return EdgesZ;
+            }
             
             StatisticsContainer & operator()(int & ix, int & iy, int & iz, int & key);
             Vector0DMap & operator()(int & ix, int & iy, int & iz);

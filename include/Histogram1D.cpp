@@ -204,6 +204,7 @@
                 iss = std::istringstream(line);
                 iss >> dummy1 >> Contents[ix].TotalSQR;
             }
+            file.close();
         }
         void Histogram1D::ReadTotal(std::string filename){
             std::ifstream file;
@@ -218,6 +219,7 @@
                 iss = std::istringstream(line);
                 iss >> dummy1 >> Contents[ix].Total;
             }
+            file.close();
         }
         void Histogram1D::ReadCount(std::string filename){
             std::ifstream file;
@@ -232,6 +234,7 @@
                 iss = std::istringstream(line);
                 iss >> dummy1 >> Contents[ix].EntryCount;
             }
+            file.close();
         }
     }
 // }

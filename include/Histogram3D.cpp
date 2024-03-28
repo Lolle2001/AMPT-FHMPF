@@ -372,6 +372,7 @@
                     }
                 }
             }
+            file.close();
         }
         void Histogram3D::ReadTotal(std::string filename){
             std::ifstream file;
@@ -389,6 +390,7 @@
                     }
                 }
             }
+            file.close();
         }
         void Histogram3D::ReadCount(std::string filename){
             std::ifstream file;
@@ -406,6 +408,7 @@
                     }
                 }
             }
+            file.close();
         }
 
 

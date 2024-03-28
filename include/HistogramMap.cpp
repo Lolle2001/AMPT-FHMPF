@@ -195,6 +195,28 @@
             }
         }
 
+        void HistogramMap3D::PrintEdges(std::ostream & output){
+            output << "nbins(x) = " << nx << "\n";
+            output << "edges(x) = ";
+            for(int ix = 0; ix <= nx; ++ix){
+                output << EdgesX[ix] << " ";
+            }
+            output << "\n";
+            output << "nbins(y) = " << ny << "\n";
+            output << "edges(y) = ";
+            for(int iy = 0; iy <= ny; ++iy){
+                output << EdgesY[iy] << " ";
+            }
+            output << "\n";
+            output << "nbins(z) = " << nz << "\n";
+            output << "edges(z) = ";
+            for(int iz = 0; iz <= nz; ++iz){
+                output << EdgesZ[iz] << " ";
+            }
+            output << "\n";
+
+        }
+
 
         void HistogramMap3D::PrintCount(std::ostream & output){
             for(int ix = 0; ix < nx; ++ix){
@@ -253,8 +275,169 @@
                 }
             }
         }
-        
 
+        void HistogramMap3D::ReadEdges(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+            std::string dummy1;
+            std::string dummy2;
+            std::string dummy3;
+            double edge;
+            file.open(filename, std::ios::in);
+            
+            
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2 >> nx;
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2;
+       
+            
+            while(iss >> edge){
+               
+                EdgesX.push_back(edge);
+            }
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+            iss >> dummy1 >> dummy2 >> ny;
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+            
+            iss >> dummy1 >> dummy2;
+            
+            while(iss >> edge){
+                EdgesY.push_back(edge);
+            }
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+
+             iss >> dummy1 >> dummy2 >> nz;
+
+
+            std::getline(file, line);
+            iss = std::istringstream(line);
+            
+            iss >> dummy1 >> dummy2;
+
+            while(iss >> edge){
+                EdgesZ.push_back(edge);
+            }
+
+            file.close();
+            Resize(nx, ny, nz);
+            InitializeIndexMap();
+        }
+        
+        void HistogramMap3D::ReadTotalSQR(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+           
+            std::string dummy1;
+            std::string dummy2;
+            int nids;
+            int pid;
+            file.open(filename, std::ios::in);
+         
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                iss = std::istringstream(line);
+               
+                iss >> dummy1 >> dummy2 >> nids;
+              
+                for(int ip = 0; ip < nids; ++ip){
+                    std::getline(file, line);
+                    iss = std::istringstream(line);
+                    iss >> pid;
+                   
+                    for(int iy = 0; iy < ny; ++iy){
+                    
+                        for(int iz = 0; iz < nz; ++iz){
+                            iss >> Contents[ix][iy][iz][pid].TotalSQR;
+                        }
+                    }
+                }
+                
+            }
+            file.close();
+        }
+
+        void HistogramMap3D::ReadTotal(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+           
+            std::string dummy1;
+            std::string dummy2;
+            int nids;
+            int pid;
+            file.open(filename, std::ios::in);
+         
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                iss = std::istringstream(line);
+               
+                iss >> dummy1 >> dummy2 >> nids;
+              
+                for(int ip = 0; ip < nids; ++ip){
+                    std::getline(file, line);
+                    iss = std::istringstream(line);
+                    iss >> pid;
+                   
+                    for(int iy = 0; iy < ny; ++iy){
+                    
+                        for(int iz = 0; iz < nz; ++iz){
+                            iss >> Contents[ix][iy][iz][pid].Total;
+                        }
+                    }
+                }
+                
+            }
+            file.close();
+        }
+
+        void HistogramMap3D::ReadCount(std::string filename){
+            std::ifstream file;
+            std::string line;
+            std::istringstream iss;
+           
+            std::string dummy1;
+            std::string dummy2;
+            int nids;
+            int pid;
+            file.open(filename, std::ios::in);
+         
+            for(int ix = 0; ix < nx; ++ix){
+                std::getline(file, line);
+                iss = std::istringstream(line);
+               
+                iss >> dummy1 >> dummy2 >> nids;
+              
+                for(int ip = 0; ip < nids; ++ip){
+                    std::getline(file, line);
+                    iss = std::istringstream(line);
+                    iss >> pid;
+                   
+                    for(int iy = 0; iy < ny; ++iy){
+                    
+                        for(int iz = 0; iz < nz; ++iz){
+                            iss >> Contents[ix][iy][iz][pid].EntryCount;
+                        }
+                    }
+                }
+                
+            }
+            file.close();
+        }
 
 
 

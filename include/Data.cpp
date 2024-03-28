@@ -10,8 +10,9 @@
         void Data_ampt::SetupCustomHistograms(){
             // BINEDGES
             // std::string centrality_key = "1:PbPb";
-
+           
             centrality_edges_custom["1:PbPb5020"] = (std::vector<double>){0.00, 3.49, 4.93, 6.98, 8.55, 9.87, 11.00, 12.10,  13.10, 14.00, 14.90, 20.00};
+            // centrality_edges_custom["2:PbPb5020"] = (std::vector<double>){0.00,3.49,4.93,6.04,6.98,7.80,8.55,9.23,9.87,10.50,11.00,11.60,12.10,12.60,13.10,13.50,14.00,14.40,14.90,15.60,20.00};
             centrality_edges_custom["1:pPb5020"]  = (std::vector<double>){0.00, 1.82, 2.58, 3.65, 4.47, 5.16, 5.77,  6.32,  6.84,  7.36,  7.99,  14.70};
             centrality_edges_custom["1:pp5020"]   = (std::vector<double>){0.00, 20.00};
          
@@ -62,7 +63,7 @@
             momentum_edges_custom["5:charged"] = (std::vector<double>){0.2, 2.};
 
             rapidity_edges_custom["1:meanpt"] = (std::vector<double>){-0.5, 0.5};
-            momentum_edges_custom["1:meanpt"] = (std::vector<double>){0.01, 20.};
+            momentum_edges_custom["1:meanpt"] = (std::vector<double>){0., 3.};
 
             // rapidity_edges_custom["3:pi+_pi-"]  = (std::vector<double>){-0.5, 0.5};
             // momentum_edges_custom["3:pi+_pi-"]  = (std::vector<double>){0.2 ,  0.25,  0.3 ,  0.35,  0.4 ,  0.45,  0.5 ,  0.55,  0.6 , 0.65,  0.7 ,  0.75,  0.8 ,  0.85,  0.9 ,  0.95,  1.  ,  1.1 , 1.2 ,  1.3 ,  1.4 ,  1.5 ,  1.6 ,  1.7 ,  1.8 ,  1.9 ,  2.  , 2.2 ,  2.4 ,  2.6 ,  2.8 ,  3.  ,  3.2 ,  3.4 ,  3.6 ,  3.8 , 4.  ,  4.5 ,  5.  ,  5.5 ,  6.  ,  6.5 ,  7.  ,  8.  ,  9.  , 10.  , 11.  , 12.  , 13.  , 14.  , 15.  , 16.  , 18.  , 20.  };
@@ -149,6 +150,7 @@
 
             centrality_custom["impactparameter"] = std::make_unique<Histogram1D>(centrality_edges_custom[centrality_key]);
             centrality_custom["participation"]   = std::make_unique<Histogram1D>(centrality_edges_custom[centrality_key]);
+            // centrality_custom["participation_2"]   = std::make_unique<Histogram1D>(centrality_edges_custom["2:PbPb5020"]);
 
 
             filenames_custom["meanpt_chprotons"] = "meanpt_chprotons";
@@ -186,6 +188,7 @@
 
             filenames_custom["impactparameter"]  = "impactparameter";
             filenames_custom["participation"]    = "participation";
+            // filenames_custom["participation_2"]    = "participation_2";
 
             filenames_custom["rap_chprotons"]   = "rap_chprotons";
             filenames_custom["rap_chkaons"]     = "rap_chkaons";
@@ -379,6 +382,7 @@
             
             centrality_custom["impactparameter"]->Add(block.ImpactParameter, block.ImpactParameter);
             centrality_custom["participation"]->Add(block.ImpactParameter,  block.NumberOfParticipantNucleons_PROJ + block.NumberOfParticipantNulceons_TARG);
+            // centrality_custom["participation_2"]->Add(block.ImpactParameter,  block.NumberOfParticipantNucleons_PROJ + block.NumberOfParticipantNulceons_TARG);
             // centrality_custom["5:pPb"]->Add(block.ImpactParameter, block.NumberOfParticipantNucleons_PROJ + block.NumberOfParticipantNulceons_TARG);
             histograms_custom["pt_chpions"]                   ->AddEvent();            
             histograms_custom["pt_ratio_chpions_to_chkaons"]  ->AddEvent();
@@ -600,6 +604,18 @@
             filename.str("");
             filename.clear();
 
+            filename << directory << "/" << DEFAULT_NAME_YIELD << "_" << DEFAULT_SPECIFIER_CENTRALITY << "_" << "SETTINGS" << "." << DEFAULT_EXTENSION_HISTOGRAM;
+            file.open(filename.str(), std::ios::out);
+            Yield.PrintEdges(file);
+            file.close();
+            filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
+            printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+            printf("%s[%07.3fMB]%s ", PP::HIGHLIGHT, filesize, PP::RESET);
+            printf("%-14s : %s\n", "Writen data to", filename.str().c_str());
+            fflush(stdout);
+            filename.str("");
+            filename.clear();
+
             // TransverseMomentum
             TransverseMomentum.Convert();
             filename << directory << "/" << DEFAULT_NAME_TRANSVERSEMOMENTUM << "_" << DEFAULT_SPECIFIER_CENTRALITY << "_" << "COUNT" << "." << DEFAULT_EXTENSION_HISTOGRAM;
@@ -629,6 +645,18 @@
             filename << directory << "/" << DEFAULT_NAME_TRANSVERSEMOMENTUM << "_" << DEFAULT_SPECIFIER_CENTRALITY << "_" << "TOTALSQR" << "." << DEFAULT_EXTENSION_HISTOGRAM;
             file.open(filename.str(), std::ios::out);
             TransverseMomentum.PrintTotalSQR(file);
+            file.close();
+            filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
+            printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+            printf("%s[%07.3fMB]%s ", PP::HIGHLIGHT, filesize, PP::RESET);
+            printf("%-14s : %s\n", "Writen data to", filename.str().c_str());
+            fflush(stdout);
+            filename.str("");
+            filename.clear();
+
+            filename << directory << "/" << DEFAULT_NAME_TRANSVERSEMOMENTUM << "_" << DEFAULT_SPECIFIER_CENTRALITY << "_" << "SETTINGS" << "." << DEFAULT_EXTENSION_HISTOGRAM;
+            file.open(filename.str(), std::ios::out);
+            TransverseMomentum.PrintEdges(file);
             file.close();
             filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
             printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
@@ -677,11 +705,59 @@
                 fflush(stdout);
                 filename.str("");
                 filename.clear();
+
+                filename << directory << "/" << DEFAULT_NAME_ANISOTROPICFLOW << "_" << iv << "_" << DEFAULT_SPECIFIER_CENTRALITY << "_" << "SETTINGS" << "." << DEFAULT_EXTENSION_HISTOGRAM;
+                file.open(filename.str(), std::ios::out);
+                AnisotropicFlow[iv].PrintEdges(file);
+                file.close();
+                filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
+                printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+                printf("%s[%07.3fMB]%s ", PP::HIGHLIGHT, filesize, PP::RESET);
+                printf("%-14s : %s\n", "Writen data to", filename.str().c_str());
+                fflush(stdout);
+                filename.str("");
+                filename.clear();
             }
 
             filename << directory << "/" << DEFAULT_NAME_CENTRALITYINFO << "_" << "COUNT" << "." << DEFAULT_EXTENSION_HISTOGRAM;
             file.open(filename.str(), std::ios::out);
             Centrality.PrintCount(file);
+            file.close();
+            filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
+            printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+            printf("%s[%07.3fMB]%s ", PP::HIGHLIGHT, filesize, PP::RESET);
+            printf("%-14s : %s\n", "Writen data to", filename.str().c_str());
+            fflush(stdout);
+            filename.str("");
+            filename.clear();
+
+            filename << directory << "/" << DEFAULT_NAME_CENTRALITYINFO << "_" << "TOTAL" << "." << DEFAULT_EXTENSION_HISTOGRAM;
+            file.open(filename.str(), std::ios::out);
+            Centrality.PrintTotal(file);
+            file.close();
+            filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
+            printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+            printf("%s[%07.3fMB]%s ", PP::HIGHLIGHT, filesize, PP::RESET);
+            printf("%-14s : %s\n", "Writen data to", filename.str().c_str());
+            fflush(stdout);
+            filename.str("");
+            filename.clear();
+
+              filename << directory << "/" << DEFAULT_NAME_CENTRALITYINFO << "_" << "TOTALSQR" << "." << DEFAULT_EXTENSION_HISTOGRAM;
+            file.open(filename.str(), std::ios::out);
+            Centrality.PrintTotalSQR(file);
+            file.close();
+            filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
+            printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
+            printf("%s[%07.3fMB]%s ", PP::HIGHLIGHT, filesize, PP::RESET);
+            printf("%-14s : %s\n", "Writen data to", filename.str().c_str());
+            fflush(stdout);
+            filename.str("");
+            filename.clear();
+
+              filename << directory << "/" << DEFAULT_NAME_CENTRALITYINFO << "_" << "SETTINGS" << "." << DEFAULT_EXTENSION_HISTOGRAM;
+            file.open(filename.str(), std::ios::out);
+            Centrality.PrintEdges(file);
             file.close();
             filesize = AMPT::Functions::GetFileSize(filename.str(), 2);
             printf("%s%s%s ", PP::FINISHED, "[INFO]", PP::RESET);
