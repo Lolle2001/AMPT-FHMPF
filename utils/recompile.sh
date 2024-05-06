@@ -9,7 +9,7 @@ do
     rm -f bin/ampt_$i/ampt
     cp -a src/$SRC_DIR/. bin/ampt_$i
     cd bin/ampt_$i
-    make > /dev/null 2>&1 &
+    make -j12 1> build.log 2> build.err
     cd ../..
 
 done

@@ -1,12 +1,18 @@
-bash server/fetchfromserver.sh $1 2000
-bash server/fetchfromserver.sh $1 2001
-bash server/fetchfromserver.sh $1 2002
-bash server/fetchfromserver.sh $1 2003
-bash server/fetchfromserver.sh $1 2004
-# bash server/fetchfromserver.sh $1 3000
-bash server/fetchfromserver.sh $1 3001
-bash server/fetchfromserver.sh $1 3002
-bash server/fetchfromserver.sh $1 3003
-bash server/fetchfromserver.sh $1 3004
-bash server/fetchfromserver.sh $1 3005
-bash server/fetchfromserver.sh $1 4000
+read -s -p "Password: " password
+
+# bash server/fetchfromserverfull.sh $password 6000
+# bash server/fetchfromserverfull.sh $password 6001
+# bash server/fetchfromserverfull.sh $password 6002
+# bash server/fetchfromserverfull.sh $password 6003
+# bash server/fetchfromserverfull.sh $password 6004
+# bash server/fetchfromserverfull.sh $password 6005
+# bash server/fetchfromserverfull.sh $password 6006
+# bash server/fetchfromserverfull.sh $password 6007
+# bash server/fetchfromserverfull.sh $password 6008
+# bash server/fetchfromserverfull.sh $password 6009
+bash server/fetchfromserverfull.sh $password 7006
+bash server/fetchfromserverfull.sh $password 7007
+bash server/fetchfromserverfull.sh $password 7008
+bash server/fetchfromserverfull.sh $password 7009
+bash server/fetchfromserverfull.sh $password 7010
+
