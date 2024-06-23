@@ -1,0 +1,13 @@
+╭───────────────────────────────────────────────────────────────────╮
+│ AMPT Multiprocessing Interface                                    │
+│ Version 1.0.0                                                     │
+│ Made by Lieuwe Huisman                                            │
+│ Made for AMPT version: v23.02.2024                                │
+├───────────────────────────────────────────────────────────────────┤
+│ Bin range        : 001 to 010                                     │
+│ Number of events : 100                                            │
+│ Input file       : data                                           │
+│ Output directory : bin                                            │
+│ Starting time    : 2024-06-23 11:29:37                            │
+├───────────────────────────────────────────────────────────────────┤
+

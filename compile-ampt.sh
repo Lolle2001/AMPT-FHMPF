@@ -1,0 +1,1 @@
+make -f make/Makefile -j 12

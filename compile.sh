@@ -11,7 +11,7 @@ mkdir -p "input"
 mkdir -p "bin"
 mkdir -p "data"
 
-# You might want to change the compiler in the Makefile
+# You might want to change the compiler in the Makefile in the source directory
 # as f77 does not work for MacOSX but gfortran does.
 bash utils/createbins.sh 1 $NUMBEROFBINS original
 

@@ -1,0 +1,19 @@
+╭────────────────────────────────────────────────────────────────────────╮
+│ AMPT Multiprocesser                                                    │
+│ Version 3.0.0                                                          │
+│ Made by Lieuwe Huisman                                                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ Bin Directory    : /home/lieuwe/Documents/Software/AMPT/bin            │
+│ Input Directory  : /home/lieuwe/Documents/Software/AMPT/input          │
+│ Output Directory : /home/lieuwe/Documents/Software/AMPT/data           │
+│ Used Bins        : 001 to 002                                          │
+│ Used CPU Count   : 002                                                 │
+│ Number of Events : 2                                                   │
+│ Starting Time    : za 22 jun 2024  0:09:51 CEST                        │
+├────────────────────────────────────────────────────────────────────────┤
+│ Job 01 started at  : za 22 jun 2024  0:09:51 CEST                      │
+│ Job 02 started at  : za 22 jun 2024  0:09:52 CEST                      │
+│ Job 01 finished at : za 22 jun 2024  0:10:03 CEST                      │
+│ Job 01 finished in : 0000:00:11.743                                    │
+│ Job 02 finished at : za 22 jun 2024  0:10:03 CEST                      │
+│ Job 02 finished in : 0000:00:11.586                                    │

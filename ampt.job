@@ -1,3 +1,3 @@
-#!/bin/bash
-bash rampt.sh animation.par 100006 31 31
+#! /usr/bin/env bash
+bash rampt.sh default.par 1 1 1
 

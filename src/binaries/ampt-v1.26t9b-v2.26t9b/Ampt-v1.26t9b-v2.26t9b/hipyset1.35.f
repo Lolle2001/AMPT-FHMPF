@@ -6070,6 +6070,9 @@ C...differential cross-sections to be used for weighting.
       DATA CHMO/'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep',  
      &'Oct','Nov','Dec'/, CHLH/'lepton','hadron'/   
     
+clin-12/2012 correct NN differential cross section in HIJING:
+      WRITE(MSTU(11),*) 'In PYINIT: BEAM,TARGET= ',BEAM,TARGET
+
 C...Write headers.  
 C      IF(MSTP(122).GE.1) WRITE(MSTU(11),1000) MSTP(181),MSTP(182),  
 C     &MSTP(185),CHMO(MSTP(184)),MSTP(183)   
@@ -6293,6 +6296,9 @@ C...of subroutines; also computes cross-sections.
       SAVE /PYINT2/ 
       COMMON/PYINT5/NGEN(0:200,3),XSEC(0:200,3) 
       SAVE /PYINT5/ 
+clin-9/2018:
+      COMMON /debug1/ JPhrd, JThrd, iremiss, imiss2
+      SAVE /debug1/
     
 C...Loop over desired number of overlayed events (normally 1).  
       MINT(7)=0 
@@ -6370,6 +6376,9 @@ C...Multiple interactions.
     
 C...Hadron remnants and primordial kT.  
         CALL PYREMN(IPU1,IPU2)  
+clin-9/2018 after exit from infinite loop in PYREMN:
+        if(imiss2.gt.100000) return
+c
         IF(MINT(51).EQ.1) GOTO 100  
         NSAV3=N 
     
@@ -9131,8 +9140,17 @@ C...Choose new t: fix alpha_s, alpha_s(Q2), alpha_s(k_T2).
         TEVB=TEVB+LOG(RLU(0))*PARU(2)/(PARU(111)*WTSUM) 
       ELSEIF(MSTP(64).EQ.1) THEN    
         TEVB=TEVB*EXP(MAX(-100.,LOG(RLU(0))*B0/WTSUM))  
-      ELSE  
-        TEVB=TEVB*EXP(MAX(-100.,LOG(RLU(0))*B0/(5.*WTSUM))) 
+      ELSE
+clin-12/2018 Segmentation fault may come when the following EXP(x) 
+c     gives 1.00000000 with RLU(0)>~0.9999 (then TEVB does not change)
+c     and then IS(2) may be undefined and be >10^8 (out of bound); 
+c     to prevent this, generate another random value when EXP(x)=1
+c     (note that RLU itself cannot be exactly 0. or 1.):
+c        TEVB=TEVB*EXP(MAX(-100.,LOG(RLU(0))*B0/(5.*WTSUM))) 
+         TEVB0=TEVB
+ 188     TEVB=TEVB*EXP(MAX(-100.,LOG(RLU(0))*B0/(5.*WTSUM))) 
+         if(TEVB0.eq.TEVB) goto 188
+c
       ENDIF 
   190 Q2REF=ALAM(JT)**2*EXP(TEVB)   
       Q2B=Q2REF/PARP(63)    
@@ -9241,6 +9259,15 @@ C...Find maximum allowed mass of timelike parton.
       ELSEIF(N.GT.NS+2) THEN    
         JR=3-JT 
         DQ2(3)=dble(Q2B)
+clin-12/2018 out-of-bound IS() will lead to segmentaiton fault
+c     when DPC() is called below, so return from here:
+        if(IS(1).gt.9000.or.IS(2).gt.9000) then
+           write(6,*) 'is:',N,JT,NS,IS(1),IS(2),Q2S(1),Q2S(2)
+           CALL LUERRM(11,'(PYSSPA:) no more memory left in LUJETS')   
+           IF(MSTU(21).GE.1) N=NS  
+           IF(MSTU(21).GE.1) RETURN    
+        endif
+c
         DPC(1)=dble(P(IS(1),4))
         DPC(2)=dble(P(IS(2),4))
         DPC(3)=dble(0.5*(ABS(P(IS(1),3))+ABS(P(IS(2),3))))
@@ -9884,7 +9911,13 @@ C...COMMON BLOCK FROM HIJING
       COMMON/PYINT1/MINT(400),VINT(400) 
       SAVE /PYINT1/ 
       DIMENSION KFLCH(2),KFLSP(2),CHI(2),PMS(6),IS(2),ROBO(5)   
-    
+clin-9/2018:
+      COMMON /AREVT/ IAEVT, IARUN, MISS
+      SAVE /AREVT/
+      COMMON /debug1/ JPhrd, JThrd, iremiss, imiss2
+      SAVE /debug1/
+      iremiss=iremiss+1
+c
 C...Special case for lepton-lepton interaction. 
       IF(MINT(43).EQ.1) THEN    
         DO 100 JT=1,2   
@@ -10063,7 +10096,18 @@ C...hadronic events or leptoproduction.
       ENDIF 
     
 C...Subdivide remnant if necessary, store first parton. 
+
+clin-9/2018:
+      imiss2=0
+
   140 I=NS  
+clin-9/2018 exit from infinite (100000) loop in PYREMN:
+      imiss2=imiss2+1
+      if(imiss2.gt.100000) then
+c         write(*,*) 'imiss2',iaevt, JPhrd, JThrd, iremiss, imiss2
+         return
+      endif
+c
       DO 190 JT=1,2 
       IF(JT.EQ.ILEP) GOTO 190   
       IF(JT.EQ.1) IPU=IPU1  
@@ -10193,7 +10237,10 @@ C...Leptoproduction events: boost colliding subsystem.
         CALL LUDBRB(I1,I2,ASIN(SINTH),0.,DBLE(BETAX),0D0,0D0)   
         CALL LUDBRB(I1,I2,0.,PHIPT,0D0,0D0,DBLE(BETAZ)) 
       ENDIF 
-    
+clin-9/2018 write number of loops for other cases with imiss2>1000:
+      if(imiss2.gt.1000)
+     1     write(6,*) 'PYREMN in big loop: imiss2=',imiss2,iaevt
+c
       RETURN    
       END   
     
@@ -11180,7 +11227,10 @@ C...H0 -> gamma + Z0; quark, charged lepton and W loop contributions
             JL=2*(J-2*MSTP(1))-1    
             EJ=KCHG(10+JL,1)/3. 
             AJ=SIGN(1.,EJ+0.1)  
-            VJ=AI-4.*EJ*XW  
+clin-9/2018 Should be a bug: AI below should be AJ:
+c            VJ=AI-4.*EJ*XW  
+            VJ=AJ-4.*EJ*XW  
+c
             EPS=(2.*PMAS(10+JL,1)/RMAS)**2  
             EPSP=(2.*PMAS(10+JL,1)/PMAS(23,1))**2   
           ELSE  
@@ -14662,7 +14712,8 @@ C...FERMILAB-Pub-87/100-T, LBL-23504, June, 1987
       COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
       SAVE /LUDAT1/ 
     
-      ASINH(X)=LOG(X+SQRT(X**2+1.)) 
+clin-8/2014:
+c      ASINH(X)=LOG(X+SQRT(X**2+1.)) 
       ACOSH(X)=LOG(X+SQRT(X**2-1.)) 
     
       IF(EPS.LT.0.) THEN    
@@ -14692,7 +14743,8 @@ C...FERMILAB-Pub-87/100-T, LBL-23504, June, 1987
       COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
       SAVE /LUDAT1/ 
     
-      ASINH(X)=LOG(X+SQRT(X**2+1.)) 
+clin-8/2014:
+c      ASINH(X)=LOG(X+SQRT(X**2+1.)) 
       ACOSH(X)=LOG(X+SQRT(X**2-1.)) 
     
       IF(EPS.LT.0.) THEN    

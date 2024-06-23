@@ -280,7 +280,9 @@ c=======================================================================
 c
         IMPLICIT DOUBLE PRECISION(D)  
         DOUBLE PRECISION  enenew, pxnew, pynew, pznew
-        DOUBLE PRECISION  de0, beta2, gam
+clin-8/2015 changed ptwo(2,5) and related variables to double precision
+c     to avoid IEEE_DIVIDE_BY_ZERO or IEEE_INVALID or IEEE_OVERFLOW_FLAG:
+        DOUBLE PRECISION  de0, beta2, gam, ptwo, px0, py0, pz0, xm0
         common /lor/ enenew, pxnew, pynew, pznew
 cc      SAVE /lor/
         COMMON/HPARNT/HIPR1(100),IHPR2(50),HINT1(100),IHNT2(50)
@@ -308,19 +310,19 @@ c     Note: htop() decomposes a meson to q as it(1) followed by qbar as it(2):
            endif
         endif
 c
-        ds=dble(xm0)**2
-        dpcm=dsqrt((ds-dble(ptwo(1,5)+ptwo(2,5))**2)
-     1 *(ds-dble(ptwo(1,5)-ptwo(2,5))**2)/ds/4d0)
+        ds=xm0**2
+        dpcm=dsqrt((ds-(ptwo(1,5)+ptwo(2,5))**2)
+     1 *(ds-(ptwo(1,5)-ptwo(2,5))**2)/ds/4d0)
         dpz=dpcm*dcth
         dpx=dpcm*dsqrt(1.d0-dcth**2)*dcos(dphi)
         dpy=dpcm*dsqrt(1.d0-dcth**2)*dsin(dphi)
-        de1=dsqrt(dble(ptwo(1,5))**2+dpcm**2)
-        de2=dsqrt(dble(ptwo(2,5))**2+dpcm**2)
+        de1=dsqrt(ptwo(1,5)**2+dpcm**2)
+        de2=dsqrt(ptwo(2,5)**2+dpcm**2)
 c
-      de0=dsqrt(dble(px0)**2+dble(py0)**2+dble(pz0)**2+dble(xm0)**2)
-        dbex=dble(px0)/de0
-        dbey=dble(py0)/de0
-        dbez=dble(pz0)/de0
+      de0=dsqrt(px0**2+py0**2+pz0**2+xm0**2)
+        dbex=px0/de0
+        dbey=py0/de0
+        dbez=pz0/de0
 c     boost the reference frame up by beta (pznew=gam(pz+beta e)):
       beta2 = dbex ** 2 + dbey ** 2 + dbez ** 2
       gam = 1.d0 / dsqrt(1.d0 - beta2)
@@ -329,15 +331,15 @@ c     boost the reference frame up by beta (pznew=gam(pz+beta e)):
       endif
 c
       call lorenz(de1,dpx,dpy,dpz,-dbex,-dbey,-dbez)
-        ptwo(1,1)=sngl(pxnew)
-        ptwo(1,2)=sngl(pynew)
-        ptwo(1,3)=sngl(pznew)
-        ptwo(1,4)=sngl(enenew)
+        ptwo(1,1)=pxnew
+        ptwo(1,2)=pynew
+        ptwo(1,3)=pznew
+        ptwo(1,4)=enenew
       call lorenz(de2,-dpx,-dpy,-dpz,-dbex,-dbey,-dbez)
-        ptwo(2,1)=sngl(pxnew)
-        ptwo(2,2)=sngl(pynew)
-        ptwo(2,3)=sngl(pznew)
-        ptwo(2,4)=sngl(enenew)
+        ptwo(2,1)=pxnew
+        ptwo(2,2)=pynew
+        ptwo(2,3)=pznew
+        ptwo(2,4)=enenew
 c
       RETURN
       END
@@ -350,7 +352,7 @@ c
       PARAMETER (MAXIDL=4001)
       DOUBLE PRECISION  GX0, GY0, GZ0, FT0, PX0, PY0, PZ0, E0, XMASS0
       DOUBLE PRECISION  PXSGS,PYSGS,PZSGS,PESGS,PMSGS,
-     1     GXSGS,GYSGS,GZSGS,FTSGS
+     1     GXSGS,GYSGS,GZSGS,FTSGS, ptwo, xmdq, ptwox, ptwoy, ptwoz
       dimension it(4)
       COMMON/HMAIN2/KATT(MAXSTR,4),PATT(MAXSTR,4)
 cc      SAVE /HMAIN2/
@@ -389,8 +391,13 @@ c     otherwise sometimes beta>1 and gamma diverge in lorenz():
 cc      SAVE /SOFT/
       common/anim/nevent,isoft,isflag,izpc
 cc      SAVE /anim/
-      DOUBLE PRECISION  vxp0,vyp0,vzp0
-      common /precpa/ vxp0(MAXPTN), vyp0(MAXPTN), vzp0(MAXPTN)
+clin-8/2015:
+      DOUBLE PRECISION vxp0,vyp0,vzp0,xstrg0,ystrg0,xstrg,ystrg
+      common /precpa/vxp0(MAXPTN),vyp0(MAXPTN),vzp0(MAXPTN),
+     1     xstrg0(MAXPTN),ystrg0(MAXPTN),
+     2     xstrg(MAXPTN),ystrg(MAXPTN),istrg0(MAXPTN),istrg(MAXPTN)
+c      DOUBLE PRECISION  vxp0,vyp0,vzp0
+c      common /precpa/ vxp0(MAXPTN), vyp0(MAXPTN), vzp0(MAXPTN)
 cc      SAVE /precpa/
       common /para7/ ioscar,nsmbbbar,nsmmeson
       COMMON /AREVT/ IAEVT, IARUN, MISS
@@ -575,20 +582,21 @@ c
               ftn(nnozpc)=FTAR(i)
            else
               NJSGS(i)=2
-              ptwo(1,5)=ulmass(it(1))
-              ptwo(2,5)=ulmass(it(2))
-              call decomp(patt(i,1),patt(i,2),patt(i,3),XMAR(i),i,it(1))
+              ptwo(1,5)=dble(ulmass(it(1)))
+              ptwo(2,5)=dble(ulmass(it(2)))
+              call decomp(dble(patt(i,1)),dble(patt(i,2)),
+     1             dble(patt(i,3)),dble(XMAR(i)),i,it(1))
               ipamax=2
               if((isoft.eq.4.or.isoft.eq.5)
      1 .and.iabs(it(2)).gt.1000) ipamax=1
               do 1001 ipar=1,ipamax
                  npar=npar+1
                  ityp0(npar)=it(ipar)
-                 px0(npar)=dble(ptwo(ipar,1))
-                 py0(npar)=dble(ptwo(ipar,2))
-                 pz0(npar)=dble(ptwo(ipar,3))
-                 e0(npar)=dble(ptwo(ipar,4))
-                 xmass0(npar)=dble(ptwo(ipar,5))
+                 px0(npar)=ptwo(ipar,1)
+                 py0(npar)=ptwo(ipar,2)
+                 pz0(npar)=ptwo(ipar,3)
+                 e0(npar)=ptwo(ipar,4)
+                 xmass0(npar)=ptwo(ipar,5)
                  gx0(npar)=dble(GXAR(i))
                  gy0(npar)=dble(GYAR(i))
                  gz0(npar)=dble(GZAR(i))
@@ -598,6 +606,10 @@ c
                  vxp0(npar)=dble(patt(i,1)/patt(i,4))
                  vyp0(npar)=dble(patt(i,2)/patt(i,4))
                  vzp0(npar)=dble(patt(i,3)/patt(i,4))
+clin-8/2015: set parent string information for this parton:
+                 xstrg(npar)=xstrg0(i)
+                 ystrg(npar)=ystrg0(i)
+                 istrg(npar)=istrg0(i)
  1001     continue
  200      format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,f8.2))
  201      format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,e8.2))
@@ -606,23 +618,23 @@ c
      1 .and.iabs(it(2)).gt.1000) then
                  NJSGS(i)=3
                  xmdq=ptwo(2,5)
-                 ptwo(1,5)=ulmass(it(3))
-                 ptwo(2,5)=ulmass(it(4))
+                 ptwo(1,5)=dble(ulmass(it(3)))
+                 ptwo(2,5)=dble(ulmass(it(4)))
 c     8/19/02 avoid actual argument in common blocks of DECOMP:
 c                 call decomp(ptwo(2,1),ptwo(2,2),ptwo(2,3),xmdq)
-             ptwox=ptwo(2,1)
-             ptwoy=ptwo(2,2)
-             ptwoz=ptwo(2,3)
-             call decomp(ptwox,ptwoy,ptwoz,xmdq,i,it(1))
+                 ptwox=ptwo(2,1)
+                 ptwoy=ptwo(2,2)
+                 ptwoz=ptwo(2,3)
+                 call decomp(ptwox,ptwoy,ptwoz,xmdq,i,it(1))
 c
                  do 1002 ipar=1,2
                     npar=npar+1
                     ityp0(npar)=it(ipar+2)
-                    px0(npar)=dble(ptwo(ipar,1))
-                    py0(npar)=dble(ptwo(ipar,2))
-                    pz0(npar)=dble(ptwo(ipar,3))
-                    e0(npar)=dble(ptwo(ipar,4))
-                    xmass0(npar)=dble(ptwo(ipar,5))
+                    px0(npar)=ptwo(ipar,1)
+                    py0(npar)=ptwo(ipar,2)
+                    pz0(npar)=ptwo(ipar,3)
+                    e0(npar)=ptwo(ipar,4)
+                    xmass0(npar)=ptwo(ipar,5)
                     gx0(npar)=dble(GXAR(i))
                     gy0(npar)=dble(GYAR(i))
                     gz0(npar)=dble(GZAR(i))
@@ -632,6 +644,10 @@ c
                     vxp0(npar)=dble(patt(i,1)/patt(i,4))
                     vyp0(npar)=dble(patt(i,2)/patt(i,4))
                     vzp0(npar)=dble(patt(i,3)/patt(i,4))
+clin-8/2015: set parent string information for this parton:
+                    xstrg(npar)=xstrg0(i)
+                    ystrg(npar)=ystrg0(i)
+                    istrg(npar)=istrg0(i)
  1002        continue
               endif
 c
@@ -2087,7 +2103,7 @@ c
 clin-5/2009 v2 analysis
 c=======================================================================
 c     idd=0,1,2,3 specifies different subroutines for partonic flow analysis.
-      subroutine flowp(idd)
+        subroutine flowp(idd)
 c
         implicit double precision  (a-h, o-z)
         real dt
@@ -2133,6 +2149,7 @@ cc      SAVE /input1/
 cc      SAVE /INPUT2/
 cc      SAVE itimep,iaevtp,v2pp,xnpp,v2psum,v2p2sm
 cc      SAVE nfile,itanim,nlfile,nsfile,nmfile
+        common /precpb/vxp(MAXPTN),vyp(MAXPTN),vzp(MAXPTN)
         SAVE   
 csp
         dimension etpl(30,3),etps(30,3),etplf(30,3),etpsf(30,3),
@@ -2211,13 +2228,20 @@ csp07/05
            OPEN (nmfile(1),FILE='ana1/Nmt.dat', STATUS = 'UNKNOWN')
            OPEN (nmfile(2),FILE='ana1/Nmt-y2.dat', STATUS = 'UNKNOWN')
            OPEN (nmfile(3),FILE='ana1/Nmt-y1.dat', STATUS = 'UNKNOWN')
+clin-8/2015: changed unit number of animation files,
+ctest off     turn off animation output (0 to turn off and 1 to turn on):
+           ifanim=0
 clin-11/27/00 for animation:
-           if(nevent.eq.1) then
-c           OPEN (91, FILE = 'ana1/h-animate.dat', STATUS = 'UNKNOWN')
-c           write(91,*) ntmax, dt
-c           OPEN (92, FILE = 'ana1/p-animate.dat', STATUS = 'UNKNOWN')
-           OPEN (93, FILE = 'ana1/p-finalft.dat', STATUS = 'UNKNOWN')
+           if(ifanim.eq.1) then
+              OPEN (10, FILE = 'ana1/h-animate.dat', STATUS = 'UNKNOWN')
+              write(10,*) ntmax, dt
+              OPEN (11, FILE = 'ana1/p-animate.dat', STATUS = 'UNKNOWN')
+              OPEN (15, FILE = 'ana1/p-finalft.dat', STATUS = 'UNKNOWN')
            endif
+clin-10/2014: write out partons at all eta, turn off now:
+c           if(nevent.ge.1) 
+           if(nevent.lt.1) 
+     1          OPEN (93, FILE = 'ana1/parton-t.dat', STATUS='UNKNOWN')
 c
            itimep=0
            itanim=0
@@ -2290,6 +2314,8 @@ csp07/05
  1006      continue
 c     idd=1: calculate parton elliptic flow, called by zpc.f:
         else if(idd.eq.1) then        
+           if(iaevt.ne.iaevtp.and.ianp.eq.31) itanim=0
+c
            t2time = FT5(iscat)
            do 1008 ianp = 1, 30
               if (t2time.lt.tsp(ianp+1).and.t2time.ge.tsp(ianp)) then
@@ -2303,7 +2329,17 @@ c     and mess up nevt:
                  iscatt(ianp)=1
                  nevtfz(ianp)=nevtfz(ianp)+1
                  do 100 I=1,mul
-            ypartn=0.5d0*dlog((E5(i)+PZ5(i))/(E5(i)-PZ5(i)+1.d-8))
+clin-8/2015 to avoid IEEE_DIVIDE_BY_ZERO or IEEE_INVALID:
+c                    ypartn=0.5d0*dlog((E5(i)+PZ5(i))
+c     1                   /(E5(i)-PZ5(i)+1.d-8))
+                    delta=1d-8
+                    if((E5(i)-dabs(PZ5(i))+delta).le.0) then
+                       ypartn=1000000.d0*sign(1.d0,PZ5(i))
+                       write(6,*) 'ypartn error',E5(i)-dabs(PZ5(i))
+                    else
+                       ypartn=0.5d0*dlog((E5(i)+PZ5(i)+delta)
+     1                      /(E5(i)-PZ5(i)+delta))
+                    endif
                     pt2=PX5(I)**2+PY5(I)**2
 ctest off: initial (pt,y) and (x,y) distribution:
 c                    idtime=1
@@ -2400,41 +2436,75 @@ clin-3/30/00 ebe v2 variables:
               endif
  1008      continue
 clin-11/28/00 for animation:
- 101           if(nevent.eq.1) then
+clin-8/2015 ctest off turn off parton-t.dat:
+c 101       if(nevent.ge.1) then
+ 101       if(nevent.lt.1) then
               do 110 nt = 1, ntmax
                  time1=dble(nt*dt)
                  time2=dble((nt+1)*dt)
                  if (t2time.lt.time2.and.t2time.ge.time1) then
                     if(nt.le.itanim) return
-c                    write(92,*) t2time
+                    if(ifanim.eq.1) write(11,*) t2time
                     iform=0
+                    ne1all=0
+                    ne1form=0
                     do 1009 I=1,mul
-c     write out parton info only for formed ones:
-                       if(FT5(I).le.t2time) then
-                          iform=iform+1
+c     Calculate parton coordinates after propagation to current time:
+                       gz_now=GZ5(i)+(t2time-FT5(i))*PZ5(i)/E5(i)
+                       If(dabs(gz_now).lt.t2time) then
+                       etap=0.5d0*dlog((t2time+gz_now)/(t2time-gz_now))
+                       else
+                          etap=1000000.d0*sign(1.d0,gz_now)
                        endif
+                       ne1all=ne1all+1
+                       if(FT5(I).le.t2time) ne1form=ne1form+1
+c     write out parton info only for formed ones for animation:
+                       if(FT5(I).le.t2time) iform=iform+1
  1009               continue
-c                    write(92,*) iform
+clin-8/2015 for animation:
+                    if(ifanim.eq.1) write(11,*) iform
+                    write(93,184) 'evt#,t,np,npformed=',
+     1                   iaevt,t2time,ne1all,ne1form
+ 184                format(a20,i7,f8.4,2(1x,i6))
+c
                     do 120 I=1,mul
                        if(FT5(I).le.t2time) then
-clin-11/29/00-ctest off calculate parton coordinates after propagation:
-c                          gx_now=GX5(i)+(t2time-FT5(i))*PX5(i)/E5(i)
-c                          gy_now=GY5(i)+(t2time-FT5(i))*PY5(i)/E5(i)
-c                          gz_now=GZ5(i)+(t2time-FT5(i))*PZ5(i)/E5(i)
-c          write(92,140) ITYP5(i),GX5(i),GY5(i),GZ5(i),FT5(i)
-c          write(92,180) ITYP5(i),GX5(i),GY5(i),GZ5(i),FT5(i),
-c     1    PX5(i),PY5(i),PZ5(i),E5(i)
-ctest-end
+c     propagate formed partons to current time t2time using parton v:
+                          gz_now=GZ5(i)+(t2time-FT5(i))*PZ5(i)/E5(i)
+                       else
+c     back-propagate unformed partons using parent hadron v:
+                          gz_now=GZ5(i)+(t2time-FT5(i))*vzp(i)
                        endif
- 120                    continue
+c
+                       If(dabs(gz_now).lt.t2time) then
+                       etap=0.5d0*dlog((t2time+gz_now)/(t2time-gz_now))
+                       else
+                          etap=1000000.d0*sign(1.d0,gz_now)
+                       endif
+c     calculate other coordinates of the parton:
+                       if(FT5(I).le.t2time) then
+                          gx_now=GX5(i)+(t2time-FT5(i))*PX5(i)/E5(i)
+                          gy_now=GY5(i)+(t2time-FT5(i))*PY5(i)/E5(i)
+                       else
+                          gx_now=GX5(i)+(t2time-FT5(i))*vxp(i)
+                          gy_now=GY5(i)+(t2time-FT5(i))*vyp(i)
+                       endif
+                       write(93,185) ITYP5(i),PX5(i),PY5(i),PZ5(i),
+     1                      XMASS5(i),gx_now,gy_now,ft5(i),etap
+clin-8/2015 for animation:
+                       if(ifanim.eq.1.and.FT5(I).le.t2time) then
+                          write(11,180) ITYP5(i),GX5(i),GY5(i),GZ5(i),
+     1                         FT5(i),PX5(i),PY5(i),PZ5(i),E5(i)
+                       endif
+ 185           format(i3,3(1x,f8.3),1x,f8.4,1x,2(f8.3,1x),f11.4,1x,f8.3)
+ 120                continue
                     itanim=nt
                  endif
- 110              continue
+ 110          continue
            endif
 c
- 140           format(i10,4(2x,f7.2))
- 160           format(i10,3(2x,f9.5))
-c 180           format(i6,8(1x,f7.2))
+ 160       format(i10,3(2x,f9.5))
+ 180       format(i6,8(1x,f7.2))
 clin-5/17/01 calculate v2 for active partons (which have not frozen out):
 c     idd=3, called at end of zpc.f:
         else if(idd.eq.3) then        
@@ -2442,8 +2512,17 @@ c     idd=3, called at end of zpc.f:
               if(iscatt(ianp).eq.0) tscatt(ianp+1)=tscatt(ianp)
  1010      continue
            do 350 I=1,mul
-              ypartn=0.5d0*dlog((E5(i)+PZ5(i)+1.d-8)
-     1 /(E5(i)-PZ5(i)+1.d-8))
+clin-8/2015 to avoid IEEE_DIVIDE_BY_ZERO or IEEE_INVALID:
+c              ypartn=0.5d0*dlog((E5(i)+PZ5(i))
+c     1             /(E5(i)-PZ5(i)+1.d-8))
+              delta=1d-8
+              if((E5(i)-dabs(PZ5(i))+delta).le.0) then
+                 write(6,*) 'ypartn error',E5(i)-dabs(PZ5(i))
+                 ypartn=1000000.d0*sign(1.d0,PZ5(i))
+              else
+                 ypartn=0.5d0*dlog((E5(i)+PZ5(i)+delta)
+     1                /(E5(i)-PZ5(i)+delta))
+              endif
               pt2=PX5(I)**2+PY5(I)**2
               iloop=1
               if(dabs(ypartn).le.1d0) then
@@ -2625,22 +2704,25 @@ c                 if(v2var0.gt.0) varv2p(iy)=dsqrt(v2var0)
               write(49, 240) 'EBE v2p,v2p(y2),v2p(y1): avg=', v2pavg
               write(49, 240) 'EBE v2p,v2p(y2),v2p(y1): var=', varv2p
            endif
+clin-8/2015:
 clin-11/28/00 for animation:
-            if(nevent.eq.1) then
+           if(ifanim.eq.1) then
               do 1018 I=1,mul
                  if(FT5(I).le.t2time) then
-         write(93,140) ITYP5(i),GX5(i),GY5(i),GZ5(i),FT5(i)
+                    write(15,140) ITYP5(i),GX5(i),GY5(i),GZ5(i),FT5(i)
                  endif
  1018         continue
+ 140          format(i10,4(2x,f7.2))
 clin-11/29/00 signal the end of animation file:
-c              write(91,*) -10.
-c              write(91,*) 0
-c              write(92,*) -10.
-c              write(92,*) 0
-c              close (91)
-c              close (92)
-              close (93)
+              write(10,*) -10.
+              write(10,*) 0
+              write(11,*) -10.
+              write(11,*) 0
+              close(10)
+              close(11)
+              close(15)
            endif
+
 clin-5/18/01 calculate v2 for active partons:
            do 450 ianp=1,30
               do 400 iy=1,3
@@ -2700,16 +2782,20 @@ c     scale the hadron part in case nevt(ianp) != nevent:
                  etph=etph+eth(ianh,iy)*dble(nevent)*shadr
                  xnph=xnpact+xnhadr(ianh,iy)*shadr
                  xnp2h=xnp2+xnhadr(ianh,iy)*shadr
-clin-5/2012:
-c                 if(xnph.gt.1) then
-                 if(xnph.gt.1d0) then
+clin-8/2015 to avoid IEEE_DIVIDE_BY_ZERO:
+cclin-5/2012:
+cc                 if(xnph.gt.1) then
+c                 if(xnph.gt.1d0) then
+                 if(xnph.gt.1d0.and.nevt(ianp).ne.0) then
                     v2ph=v2ph/xnph
                     v2ph2=dsqrt((v2ph2/xnph-v2ph**2)/(xnph-1))
                     s2ph=s2ph/xnph
                     etph=etph/dble(nevt(ianp))
                     xnp2=xnp2/dble(nevt(ianp))
                     xnp2h=xnp2h/dble(nevent)
-                    if(tsp(ianp).le.(ntmax*dt)) 
+clin-8/2015
+c                    if(tsp(ianp).le.(ntmax*dt)) 
+                    if(tsp(ianp).le.dble(ntmax*dt)) 
      1                    write (nfile(iy)+3, 250) tsp(ianp),v2ph,
      2 v2ph2,s2ph,etph,xnp2h,xnp2,nevt(ianp)
                  endif
@@ -2861,24 +2947,35 @@ clin-5/04/01 ebe v2 variables:
               goto 101
            endif
  1004   continue
- 160        format(i10,3(2x,f9.5))
+ 160    format(i10,3(2x,f9.5))
+clin-8/2015:
 clin-11/27/00 for animation:
- 101        if(nevent.eq.1) then
+ctest off     turn off animation output (0 to turn off and 1 to turn on):
+ 101    ifanim=0
+        if(ifanim.eq.1) then
            IA = 0
            do 1005 J = 1, NUM
               mult=MASSR(J)
               IA = IA + MASSR(J - 1)
-c              write(91,*) ct
-c              write(91,*) mult
+              write(10,*) ct
+              write(10,*) mult
               DO 150 IC = 1, mult
                  I = IA + IC
-c                 write(91,210) LB(i),r(1,i),r(2,i),r(3,i),
-c     1              p(1,i),p(2,i),p(3,i),e(i)
- 150              continue
+clin-6/2013 for animation:                                                                  
+                 if(amax1(abs(r(1,i)),abs(r(2,i)),
+     1                abs(r(3,i))).lt.9999) then
+                    write(10,210) LB(i),r(1,i),r(2,i),r(3,i),
+     1                   p(1,i),p(2,i),p(3,i),e(i)
+                 else
+                    write(10,220) LB(i),r(1,i),r(2,i),r(3,i),
+     1                   p(1,i),p(2,i),p(3,i),e(i)
+                 endif
+ 150          continue
  1005      continue
            return
         endif
-c 210        format(i6,7(1x,f8.3))
+ 210    format(i6,7(1x,f9.3))
+ 220    format(i6,3(1x,e9.3),4(1x,f9.3))
         return
         end
 

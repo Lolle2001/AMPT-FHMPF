@@ -123,9 +123,9 @@ c     Trigger Pt of high-pt jets in HIJING:
 c      HIPR1(10)=7.
 c
       if(isoft.eq.1) then
-         amptvn = '1.26t1 (Default)'
+         amptvn = '1.26t9b (Default)'
       elseif(isoft.eq.4) then
-         amptvn = '2.26t1 (StringMelting)'
+         amptvn = '2.26t9b (StringMelting)'
       else
          amptvn = 'Test-Only'
       endif
@@ -135,7 +135,7 @@ c
      &11X,'##################################################'/1X,
      &10X,'#      AMPT (A Multi-Phase Transport) model      #'/1X,
      &10X,'#          Version ',a25,                  '     #'/1X,
-     &10X,'#                09/06/2012                      #'/1X,
+     &10X,'#               12/25/2018                       #'/1X,
      &10X,'##################################################'/1X,
      &10X,' ')
 c     when ihjsed=11: use environment variable at run time for HIJING nseed:
@@ -147,13 +147,14 @@ c     when ihjsed=11: use environment variable at run time for HIJING nseed:
       if(ihjsed.eq.11) then
          nseed=nseedr
       endif
-c     an odd number is needed for the random number generator:
-      if(mod(NSEED,2).eq.0) NSEED=NSEED+1
       if(ihjsed.eq.11) then      
          PRINT *, '#   read in: ', nseed
          WRITE(12,*) '# Read in NSEED in HIJING at run time:',nseed
       endif
       CLOSE(12)
+clin-5/2015 an odd number is needed for the random number generator:
+c      if(mod(NSEED,2).eq.0) NSEED=NSEED+1
+      NSEED=2*NSEED+1
 c     9/26/03 random number generator for f77 compiler:
       CALL SRAND(NSEED)
 c
@@ -255,5 +256,5 @@ c       call frztm(NEVNT,2)
 c
        STOP
        END
-c     FYI: taken file unit numbers are 12-14, 16-88, 91-93; 
-c     so free file unit numbers are 11,15,89,97-99.
+c     FYI: taken file unit numbers are 10-88, 91-93; 
+c     so free file unit numbers are 1-4,7-9,89,97-99.

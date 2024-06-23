@@ -801,8 +801,14 @@ cc      SAVE /ilist8/
 cbz1/25/99end
         COMMON /smearz/smearp,smearh
 cc      SAVE /smearz/
-        dimension vxp(MAXPTN), vyp(MAXPTN), vzp(MAXPTN)
-        common /precpa/ vxp0(MAXPTN), vyp0(MAXPTN), vzp0(MAXPTN)
+clin-8/2015:
+c        dimension vxp(MAXPTN), vyp(MAXPTN), vzp(MAXPTN)
+        common /precpb/vxp(MAXPTN),vyp(MAXPTN),vzp(MAXPTN)
+clin-8/2015:
+        common /precpa/vxp0(MAXPTN),vyp0(MAXPTN),vzp0(MAXPTN),
+     1       xstrg0(MAXPTN),ystrg0(MAXPTN),
+     2       xstrg(MAXPTN),ystrg(MAXPTN),istrg0(MAXPTN),istrg(MAXPTN)
+c        common /precpa/ vxp0(MAXPTN), vyp0(MAXPTN), vzp0(MAXPTN)
 cc      SAVE /precpa/
         common/anim/nevent,isoft,isflag,izpc
 cc      SAVE /anim/
@@ -857,6 +863,10 @@ ccbz1/25/99end
            vxp(I) = vxp0(INDXI)
            vyp(I) = vyp0(INDXI)
            vzp(I) = vzp0(INDXI)
+clin-8/2015:
+           xstrg0(I) = xstrg(INDXI)
+           ystrg0(I) = ystrg(INDXI)
+           istrg0(I) = istrg(INDXI)
 clin-7/09/01-end
 c
 clin-6/06/02 local freezeout initialization:
@@ -931,15 +941,27 @@ c     and after propagating to its format time:
            if(ioscar.eq.2.or.ioscar.eq.3) then
               if(dmax1(abs(gx(i)),abs(gy(i)),
      1             abs(gz(i)),abs(ft(i))).lt.9999) then
+clin-8/2015:
                  write(92,200) ityp(i),px(i),py(i),pz(i),xmass(i),
-     1                gx(i),gy(i),gz(i),ft(i)
+     1           gx(i),gy(i),gz(i),ft(i),istrg0(i),xstrg0(i),ystrg0(i)
               else
+clin-8/2015:
                  write(92,201) ityp(i),px(i),py(i),pz(i),xmass(i),
-     1                gx(i),gy(i),gz(i),ft(i)
+     1           gx(i),gy(i),gz(i),ft(i),istrg0(i),xstrg0(i),ystrg0(i)
               endif
            endif
- 200       format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,f8.2))
- 201       format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,e8.2))
+clin-8/2015:
+c 200       format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,f8.2))
+c 201       format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,e8.2))
+c     reduce file size:
+c 200       format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,f9.3),
+c     1          1x,I6,2(1x,f8.3))
+c 201       format(I6,2(1x,f8.3),1x,f10.3,1x,f6.3,4(1x,e9.3),
+c     1          1x,I6,2(1x,f8.3))
+ 200       format(I3,2(1x,f7.2),1x,f8.2,1x,f6.3,4(1x,f8.2),
+     1          1x,I5,2(1x,f7.2))
+ 201       format(I3,2(1x,f7.2),1x,f8.2,1x,f6.3,4(1x,e8.2),
+     1          1x,I5,2(1x,f7.2))
 c
  1003   continue
 
@@ -955,7 +977,14 @@ c
               else
                  rap(i) = 0.5d0 * log((e(i) + pz(i)) / (e(i) - pz(i)))
               end if
-              tau(i) = ft(i) / cosh(eta(i))
+clin-8/2015 to avoid IEEE_OVERFLOW_FLAG:
+c              tau(i) = ft(i) / cosh(eta(i))
+              if(eta(i).lt.1000000.d0) then
+                 tau(i) = ft(i) / cosh(eta(i))
+              else
+                 tau(i) = 1d-10
+              endif
+c
  1004      continue
            
            do 1005 i = 1, mul
@@ -1865,7 +1894,14 @@ cc      SAVE /ilist5/
            else
               eta(i) = 0.5d0 * log((ft(i) + gz(i)) / (ft(i) - gz(i)))
            end if
-           tau(i) = ft(i) / cosh(eta(i))
+clin-8/2015 to avoid IEEE_OVERFLOW_FLAG:
+c           tau(i) = ft(i) / cosh(eta(i))
+           if(eta(i).lt.1000000.d0) then
+              tau(i) = ft(i) / cosh(eta(i))
+           else
+              tau(i) = 1d-10
+           endif
+c
         end if
 
         return
@@ -2015,6 +2051,9 @@ ctransend
         bey = (py1 + py2) / (e1 + e2)
         bez = (pz1 + pz2) / (e1 + e2)
 
+clin-11/2015-ctest off
+c        write(99,*) 'iscat,jscat,etotalA=',iscat,jscat,e1+e2
+
         call lorenz(e1, px1, py1, pz1, bex, bey, bez)
 cc      SAVE pxnew, ..., values for later use.
         px1 = pxnew
@@ -2060,6 +2099,10 @@ clin-4/13/01: modify in case m1, m2 are different:
 c        e2 = e1
         e2 = dsqrt(px2**2+py2**2+pz2**2+xmass(jscat)**2)
 
+clin-11/2015-ctest off
+c        write(99,*) 'iscat,jscat,masses= ',iscat,jscat,
+c     1       xmass(iscat),xmass(jscat)
+
 c       boost the 2 particle 4 momentum back to lab frame
         call lorenz(e1, px1, py1, pz1, -bex, -bey, -bez)
         px(iscat) = pxnew
@@ -2071,6 +2114,10 @@ c       boost the 2 particle 4 momentum back to lab frame
         py(jscat) = pynew
         pz(jscat) = pznew
         e(jscat) = enenew
+
+clin-11/2015-ctest off
+c        write(99,*) 'iscat,jscat,etotalB= ',iscat,jscat,
+c     1       e(iscat)+e(jscat)
 
         vx(iscat) = px(iscat) / e(iscat)
         vy(iscat) = py(iscat) / e(iscat)
@@ -2111,6 +2158,9 @@ c              write (9, *) sqrt(ft(jscat) ** 2 - gz(jscat) ** 2), rts2
            end if
 ctransend
         end if
+
+clin-11/2015-ctest off
+c        write(99,*) 'iscat,jscat,xmp,xmu,that=',iscat,jscat,xmp,xmu,that
 
         return
         end

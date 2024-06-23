@@ -1196,9 +1196,14 @@ c
              elseif(nt .eq. ntmax)then
                go to 1111
              endif
+c
             DO WHILE (NP1.LE.MULTI1(IRUN).AND.
-     &           FT1(NP1, IRUN) .GT. (CT - DT) .AND. 
+     &           FT1(NP1, IRUN) .GT. ((NT-1) * DT) .AND. 
      &           FT1(NP1, IRUN) .LE. ctlong)
+clin-ma-5/2016 changed the following to 2nd line above to avoid bug 
+c     that leads to loss of hadrons inside ART due to finite accuracy 
+c     [which results in (ct-dt) + dt != ct exactly]:
+c     &           FT1(NP1, IRUN) .GT. (CT - DT) .AND. 
                NP = NP + 1
                UDT = (CT - FT1(NP1, IRUN)) / EE1(NP1, IRUN)
 clin-10/28/03 since all unformed hadrons at time ct are read in at nt=ntmax-1, 

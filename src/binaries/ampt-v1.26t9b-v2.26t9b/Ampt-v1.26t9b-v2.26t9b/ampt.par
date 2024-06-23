@@ -1,0 +1,64 @@
+{
+    "hijing": {
+        "parameter_collision_energy": 5020,
+        "parameter_frame": "CMS",
+        "parameter_projectile": "A",
+        "parameter_target": "A",
+        "parameter_mass_number_projectile": 208,
+        "parameter_atomic_number_projectile": 82,
+        "parameter_mass_number_target": 208,
+        "parameter_atomic_number_target": 82,
+        "parameter_number_of_events": 100,
+        "parameter_impactparameter_min": 0.0,
+        "parameter_impactparameter_max": 20.0,
+        "flag_hijing_seed": 11,
+        "parameter_hijing_seed": 13150909,
+        "flag_random_reaction_plane_angle": 0
+    },
+    "zpc": {
+        "parameter_coupling_constant": 0.33,
+        "parameter_zpc_seed": 8
+    },
+    "hadronization_default": {
+        "parameter_lund_splitting_a": 0.3,
+        "parameter_lund_splitting_b": 0.15
+    },
+    "hadronization_string": {
+        "parameter_coalescence_radius_momentum": 1E6,
+        "parameter_coalescence_radius_position": 1E6
+    },
+    "art": {
+        "flag_weak_decays_K0s": 0,
+        "flag_weak_decays_phi": 1,
+        "flag_weak_decays_pi0": 0
+    },
+    "flag_mode": 4,
+    "parameter_timestep_number": 1000,
+    "parameter_timestep_size": 0.2,
+    "flag_popcorn_mechanism": 1,
+    "parameter_popcorn_mechanism": 1.0,
+    "flag_nuclear_shadowing": 1,
+    "flag_quenching": 1,
+    "parameter_quenching": 2.0,
+    "parameter_minijet_production_cutoff": 2.0,
+    "parameter_parton_screening_mass": 2.265,
+    "parameter_parton_scattering_forward_angle": 0,
+    "flag_additional_output": 0,
+    "flag_perturbative_deuterons": 0,
+    "parameter_perturbative_deuterons_factor": 1,
+    "flag_perturbative_deuterons_cross_section": 1,
+    "parameter_minijet_minimum_momentum": -7.0,
+    "parameter_hijing_maximum_repeats": 1000,
+    "flag_radiation": 3,
+    "flag_kt_kick": 1,
+    "flag_quark_pair_embedding": 0,
+    "parameter_quark_embeding_initial_momentum_x": 7.0,
+    "parameter_quark_embeding_initial_momentum_y": 0.0,
+    "parameter_quark_embeding_initial_position_x": 0.0,
+    "parameter_quark_embeding_initial_position_y": 0.0,
+    "parameter_quark_embedding_soft_pion_number": 1,
+    "parameter_quark_embedding_soft_pion_momentum": 5.0,
+    "parameter_quark_embedding_soft_pion_maximum_angle": 0.0,
+    "flag_modify_nuclear_shadowing": 0,
+    "parameter_modify_nuclear_shadowing": 1.0
+}
