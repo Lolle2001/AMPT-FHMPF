@@ -1,1 +1,0 @@
-Tables gained from arXiv:1710.07098 at 22-02-2024.
