@@ -1,4 +1,4 @@
-# AMPT-Processing
+# AMPT-FHMPF
 
 This repositery contains code for running the single-threaded AMPT model (A Multi-Phase Transport model) on multiple cores[^1]. It includes:
 
