@@ -5,6 +5,8 @@
 > L. J. Huisman, _File handling and multiprocessing framework for AMPT_, thesis database UU (2024). https://link <br><br>
 > In addition, AMPT must also be cited, because AMPT source code comes with this repository[^1].
 
+#
+
 This repositery contains code for running the single-threaded AMPT model (A Multi-Phase Transport model) on multiple cores[^1]. It includes:
 
 - Compilation of different versions
