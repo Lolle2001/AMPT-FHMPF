@@ -16,7 +16,7 @@ This repositery contains code for running the single-threaded AMPT model (A Mult
 ## Running AMPT
 
 Using multiple bash scripts does not allow for a good readable code and can cause problems when it comes to file handling. For that reason a **C++** version was developed, which handles the running and compilation. Additional advantages are that command line parsing is easy to setup and that extra functionality was added with respect to the previous method.
-The program is called **ampt-mp** and needs to be compiled with **C++17**. In addition the **[fmt](https://github.com/fmtlib/fmt)**, **[argparse](https://github.com/p-ranav/argparse)** and **[OMP](https://github.com/OpenMP/sources)** libraries were used. **OMP** is usually already installed on Linux.
+The program is called **ampt-mp** and needs to be compiled with **C++17**. In addition the **[fmt](https://github.com/fmtlib/fmt)**, **[argparse](https://github.com/p-ranav/argparse)** and **[OMP](https://github.com/OpenMP/sources)** libraries were used. **OMP** is part of most compilers (see list [here](https://www.openmp.org/resources/openmp-compilers-tools/)) and does not have to be installed.
 By default it is assumed that all input files are in the directory `./input`, the source is in `./src/original` and the data is stored in `./data`. A compiled program will give the following structure to the program folder:
 
 ```
@@ -54,6 +54,42 @@ At first use, the following commands can be ran in the terminal.
 
 > [!WARNING]
 > The program has problems with racing conditions, causing a spread in the runtime of seperate instances even when they run the exact same simulation.
+
+## Detailed installation
+
+Installation of **fmt** can be done in two ways:
+
+```shell
+sudo add-apt-repository universe
+sudo apt update
+sudo apt install libfmt-dev
+```
+
+or
+
+```shell
+git clone https://github.com/fmtlib/fmt.git
+cd fmt
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+```
+
+Installation of **argparse** can be done in the following way:
+
+```shell
+git clone https://github.com/p-ranav/argparse.git
+cd argparse
+cd build
+cmake ..
+make -j 4
+sudo make install
+```
+
+> [!NOTE]
+> Make sure that installation with git clone is done in for example downloads or another directory. In addition, make sure that the libraries are correctly added to the path. On Ubuntu this is done automatically.
 
 ## Running AMPT (Old version)
 
