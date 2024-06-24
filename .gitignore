@@ -25,3 +25,4 @@ include/Histogram3D.hpp
 include/Histogram1D.cpp
 include/Data.hpp
 src/test
+!data/.gitignore

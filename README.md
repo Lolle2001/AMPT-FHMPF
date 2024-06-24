@@ -1,8 +1,54 @@
 # AMPT-Processing
 
-This repositery contains code for running AMPT on multiple cores and processing the (large amount of) data into useful results. Currently it only gives data in a format used for my bachelor thesis. The goal is to convert the AMPT data into histograms, binned into centrality, participating nuclei, transverse momentum and (pseudo)rapidity, for every particle. This converts large amounts of data into a workable format which can be stored in RAM.
+This repositery contains code for running the single-threaded AMPT model (A Multi-Phase Transport model) on multiple cores. It includes:
+
+- Compilation of different versions
+- File handling of results
+- Generation of input files
 
 ## Running AMPT
+
+Using multiple bash scripts does not allow for a good readable code and can cause problems when it comes to file handling. For that reason a **C++** version was developed, which handles the running and compilation. Additional advantages are that command line parsing is easy to setup and that extra functionality was added with respect to the previous method.
+The program is called **ampt-mp** and needs to be compiled with **C++17**. In addition the **[fmt](https://github.com/fmtlib/fmt)**, **[argparse](https://github.com/p-ranav/argparse)** and **[OMP](https://github.com/OpenMP/sources)** libraries were used. **OMP** is usually already installed on Linux.
+By default it is assumed that all input files are in the directory `./input`, the source is in `./src/original` and the data is stored in `./data`. A compiled program will give the following structure to the program folder:
+
+```
+AMPT
+├── bin
+│   ├── ampt_1
+│   ├── ampt_2
+│   ├── ...
+│   ├── ampt_n
+│   ├── anim_1
+│   └── ...
+├── input
+│   └── *.par
+├── data
+│   ├── run_1
+│   ├── run_2
+│   └── ...
+├── src
+│   ├── original
+│   ├── edited
+│   ├── ellipticflow
+│   └── ...
+└── ampt-mp
+```
+
+At first use, the following commands can be ran in the terminal.
+
+```
+./ampt-mp -h <span style="color:green"># See options for compiling AMPT</span>
+./ampt-mp -h # See options for running AMPT
+
+./ampt-mp compiler -b 1 12 # Compiles every bin with the given source code
+./ampt-mp -o test -b 1 12 # Runs AMPT in every bin and stores the data in ./data/test
+```
+
+> [!NOTE]
+> The program has problems with racing conditions, causing a spread in the runtime of seperate instances even when they run the exact same simulation.
+
+## Running AMPT (Old version)
 
 ### Compiling
 
@@ -66,72 +112,3 @@ Note that first the file must be generated with `utils/inputgen.py`, which is a 
 ```shell
 python3 utils/inputgen.py
 ```
-
-## Data processing
-
-### Processing methods
-
-There are two methods to process data from AMPT:
-
-- The first is that one can read all (desired) datafiles into a data-object and then combining all the events from the different bin directories. When working with a small amount of events and not generating large files (with for example the IOSCAR=3 option or animation source code) this method works quick and allows for a nice workflow with ROOT.
-- A different method is needed when many events are ran, the file sizes can be too big to have them stored in memory using data objects. In that case one has to process data line by line using a parse function of the data object. Summarised data containing information about the observables listed below can then be written into files. This process can take a little longer and it would be beneficial to multiprocess this properly. This summarised data is generated per event and per particle. The form of the code should allow for trivial modification to add functions in the parse function that calculated other desired observables.
-
-### Observables
-
-- Particle Yields
-  - Average taken over number of events.
-  - Calculated for each particle seperately (gives option to combine later if desired).
-  - Partitioned in centrality bins.
-  - Only for the $\left \lvert\eta\right \rvert>0.5$ pseudorapidity bin.
-- Pseudorapidity Distribution
-  - Average taken over number of events.
-  - Calculated for each particle seperately.
-  - Partitioned in centrality bins.
-  - Histogram has even binning.
-- Transverse Momentum Distribution
-  - Average taken over number of events.
-  - Calculated for each particle seperately.
-  - Partition in centrality bins.
-  - Histogram has logarthmic binning (similar to that used in ALICE articles for easy comparison).
-- Elliptic Flow (and other Flow Coëfficiënts)
-  - Average taken over total number of particles in all events.
-  - Calculated for all charged particles (currently).
-  - Partitioned in centrality bins.
-  - Only for the $\left \lvert \eta \right \rvert>0.5$ pseudorapidity bin and $0.1 < p_T < 4$ GeV/c transverse momentum bin.
-- Transverse Mass Distribution
-  - [WIP]
-- Energy Density Evolution
-  - [WIP]
-- Particle Number Density Evolution
-  - [WIP]
-- Particle Number Evolution
-  - Both for partons and hadrons.
-  - [WIP]
-- Collision Animation
-  - Can be combind with particle number evolution.
-
-## Remarks
-
-- Simulations can be done seperately for different centralities or for all centralties at once. The first assures that each centrality bin has the same amount of events. The second distributes the impact parameter according to the Glauber model.
-- Binning for the pseudorapidity and transverse momentum distributions can also be made in small steps. This allows for combining the bins afterwards, to allow a more flexible data processing without having to reproces the large dataset.
-- Evolution data should be done for single (or if you are brave enough a small number of) events.
-
-## New method of running AMPT
-
-Using multiple bash scripts does not allow for a good readable code and can cause problems when it comes to file handling. For that reason a **C++** version was developed, which handles the running and compilation. Additional advantages are that command line parsing is easy to setup and that extra functionality was added with respect to the previous method.
-The program is called **ampt-mp** and needs to be compiled with **C++17**. In addition the **[fmt](https://github.com/fmtlib/fmt)**, **[argparse](https://github.com/p-ranav/argparse)** and **[OMP](https://github.com/OpenMP/sources)** libraries were used. **OMP** is usually already installed on Linux.
-By default it is assumed that all input files are in the directory `./input`, the source is in `./src/original` and the data is stored in `./data`. At first use, the following commands can be ran in the terminal.
-
-```
-./ampt-mp -h <span style="color:green"># See options for compiling AMPT</span>
-./ampt-mp -h # See options for running AMPT
-
-./ampt-mp compiler -b 1 12 # Compiles every bin with the given source code
-./ampt-mp -o test -b 1 12 # Runs AMPT in every bin and stores the data in ./data/test
-```
-
-> [!WARNING] Remark:
-
-### Remark
-
-The program does not solve racing conditions, causing a spread in the runtime of seperate instances even when they run the exact same simulation.
