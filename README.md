@@ -1,6 +1,6 @@
 # AMPT-Processing
 
-This repositery contains code for running the single-threaded AMPT model (A Multi-Phase Transport model) on multiple cores. It includes:
+This repositery contains code for running the single-threaded AMPT model (A Multi-Phase Transport model) on multiple cores[^1]. It includes:
 
 - Compilation of different versions
 - File handling of results
@@ -52,7 +52,7 @@ At first use, the following commands can be ran in the terminal.
 
 ### Compiling
 
-Compiling can be done in two ways. One way uses the script `compile.sh` in the main folder. This script compiles version `v1.26t9b-v2.26t9b` of AMPT (from [here](https://myweb.ecu.edu/linz/ampt/)). It has one parameter to define the amount of bins that should be created. Because AMPT is inherently a single threaded program, every core needs a seperate directory in which the data is stored. . Example of use:
+Compiling can be done in two ways. One way uses the script `compile.sh` in the main folder. This script compiles version `v1.26t9b-v2.26t9b` of AMPT (from [here](https://myweb.ecu.edu/linz/ampt/)) [[1]](#1) . It has one parameter to define the amount of bins that should be created. Because AMPT is inherently a single threaded program, every core needs a seperate directory in which the data is stored. . Example of use:
 
 ```shell
 bash compile.sh numberofbins
@@ -112,3 +112,9 @@ Note that first the file must be generated with `utils/inputgen.py`, which is a 
 ```shell
 python3 utils/inputgen.py
 ```
+
+## References
+
+<a id="1">[1]</a> Z. W. Lin, C. M. Ko, B. A. Li, B. Zhang and S. Pal, A Multi-phase transport model for relativistic heavy ion collisions. Phys. Rev. C 72, 064901 (2005). https://doi.org/10.1103/PhysRevC.72.064901
+
+[^1]: Z. W. Lin, C. M. Ko, B. A. Li, B. Zhang and S. Pal, A Multi-phase transport model for relativistic heavy ion collisions. Phys. Rev. C 72, 064901 (2005). https://doi.org/10.1103/PhysRevC.72.064901

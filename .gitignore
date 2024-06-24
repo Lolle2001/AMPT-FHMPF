@@ -17,6 +17,9 @@ CMakelists.txt
 
 process.job
 utils/process.sh
-
+src/binaries/**
+!src/binaries/ampt-v1.26t9b-v2.26t9b.zip
 src/test
+src/original_up
+
 !data/.gitignore
