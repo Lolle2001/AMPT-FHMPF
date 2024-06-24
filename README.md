@@ -52,7 +52,7 @@ At first use, the following commands can be ran in the terminal.
 ./ampt-mp -o test -b 1 12 # Runs AMPT in every bin and stores the data in ./data/test
 ```
 
-> [!NOTE]
+> [!WARNING]
 > The program has problems with racing conditions, causing a spread in the runtime of seperate instances even when they run the exact same simulation.
 
 ## Running AMPT (Old version)
