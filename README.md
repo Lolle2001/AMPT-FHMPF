@@ -38,7 +38,7 @@ AMPT
 At first use, the following commands can be ran in the terminal.
 
 ```
-./ampt-mp -h <span style="color:green"># See options for compiling AMPT</span>
+./ampt-mp -h # See options for compiling AMPT</span>
 ./ampt-mp -h # See options for running AMPT
 
 ./ampt-mp compiler -b 1 12 # Compiles every bin with the given source code
