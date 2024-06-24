@@ -29,6 +29,14 @@ namespace Utilities
         ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
         return ss.str();
     }
+    Duration::Duration(char option_, std::chrono::nanoseconds duration_)
+    {
+        option = option_;
+        duration = std::chrono::nanoseconds(duration_);
+
+        GetCounts(option);
+        // std::cout << duration_.count() << " " << duration.count() << std::endl;
+    }
     Duration::Duration(char option_)
     {
         option = option_;

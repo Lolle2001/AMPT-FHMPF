@@ -5,6 +5,7 @@
 #include <sstream>
 #include <ctime>
 #include <iomanip>
+#include <iostream>
 
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
@@ -47,7 +48,7 @@ namespace Utilities
         // Duration(std::chrono::duration<int64_t, std::nano> &duration_);
         // Duration(TimePoint &start_,TimePoint &stop_);
         // Duration(TimePoint &start_,TimePoint &stop_, char option);
-
+        Duration(char option, std::chrono::nanoseconds duration_);
         Duration(char option);
         Duration(){};
 

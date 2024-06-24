@@ -11,9 +11,6 @@
 #include <thread>
 #include <boost/filesystem.hpp>
 #include <omp.h>
-#define NAME "AMPT Multiprocessing Interface"
-#define VERSION "1.0.0"
-#define DEBUG 0
 
 using PP = Utilities::PretyPrint;
 
@@ -223,92 +220,5 @@ void run_jobs(unsigned int b_min, unsigned int b_max, const std::string bindirec
 int not_main(int argc, char **argv)
 {
 
-    argparse::ArgumentParser program(NAME, VERSION);
-    program.add_description("This program is an interface to run multiple AMPT executables simultaneously such that all CPU cores can be used.");
-
-    program.add_argument("-i", "--input")
-        .default_value(std::string{"default.par"});
-    program.add_argument("-id", "--input-directory")
-        .default_value(std::string{"./input"});
-    program.add_argument("-o", "--output")
-        .default_value(std::string{"1"});
-    program.add_argument("-od", "--output-directory")
-        .default_value(std::string{"./data"});
-
-    program.add_argument("-b", "--binrange").default_value(std::vector<int>{1, 1}).nargs(2).scan<'i', int>();
-
-    try
-    {
-        program.parse_args(argc, argv);
-    }
-    catch (const std::exception &err)
-    {
-        std::cerr << err.what() << std::endl;
-        std::cerr << program;
-        std::exit(1);
-    }
-
-    argparse::ArgumentParser compiler("compiler");
-
-    std::string output_directory = program.get<std::string>("-od");
-    std::string output_name = program.get<std::string>("-o");
-
-    std::string path_output = program.get<std::string>("-od") + "/" + program.get<std::string>("-o");
-    std::string path_input = program.get<std::string>("-id") + "/" + program.get<std::string>("-i");
-
-    std::vector<int> b_range = program.get<std::vector<int>>("-b");
-    unsigned int b_min = b_range[0];
-    unsigned int b_max = b_range[1];
-
-    unsigned int b_num = b_max - b_min + 1;
-
-    TimePoint time_start = Clock::now();
-
-    std::string date_start = Utilities::return_current_time_and_date();
-
-    std::ifstream file(path_input);
-    std::string line;
-    std::getline(file, line);
-    std::getline(file, line);
-    std::getline(file, line);
-    std::getline(file, line);
-    std::getline(file, line);
-    std::getline(file, line);
-    std::getline(file, line);
-    std::getline(file, line);
-    std::getline(file, line);
-    std::stringstream ss(line);
-    size_t NEVENT;
-    ss >> NEVENT;
-    file.close();
-
-    printf("%s╭%-67s╮%s\n", PP::HIGHLIGHT, Utilities::repeat(67, "─").c_str(), PP::RESET);
-    printf("%s│%s %-65s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "AMPT Multiprocessing Interface", PP::HIGHLIGHT, PP::RESET);
-    printf("%s│%s %-65s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Version 1.0.0", PP::HIGHLIGHT, PP::RESET);
-    printf("%s│%s %-65s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Made by Lieuwe Huisman", PP::HIGHLIGHT, PP::RESET);
-    printf("%s│%s %-65s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Made for AMPT version: v23.02.2024", PP::HIGHLIGHT, PP::RESET);
-    printf("%s├%-67s┤%s\n", PP::HIGHLIGHT, Utilities::repeat(67, "─").c_str(), PP::RESET);
-    printf("%s│%s %-16s : %03d to %03d %-37s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Bin range", b_min, b_max, " ", PP::HIGHLIGHT, PP::RESET);
-    printf("%s│%s %-16s : %-3ld %-43s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Number of events", b_num * NEVENT, " ", PP::HIGHLIGHT, PP::RESET);
-    printf("%s│%s %-16s : %-46s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Input file", path_input.c_str(), PP::HIGHLIGHT, PP::RESET);
-    printf("%s│%s %-16s : %-46s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Output directory", path_output.c_str(), PP::HIGHLIGHT, PP::RESET);
-    printf("%s│%s %-16s : %-46s %s│%s\n", PP::HIGHLIGHT, PP::RESET, "Starting time", date_start.c_str(), PP::HIGHLIGHT, PP::RESET);
-    printf("%s├%-67s┤%s\n", PP::HIGHLIGHT, Utilities::repeat(67, "─").c_str(), PP::RESET);
-
-    // if (boost::filesystem::is_directory(path_output))
-    // {
-    //     char option;
-    //     std::cout << "Do you want to overwrite the current output folder [Y/N]" << std::endl;
-    //     std::cin >> option;
-    //     if (option != 'Y')
-    //     {
-    //         std::cout << "Please rerun the program with the correct output folder" << std::endl;
-    //         return 1;
-    //     }
-    // }
-    create_output_folders(b_num, output_directory, output_name);
-    clear_bin_folders(b_min, b_max, "bin");
-    copy_input_to_bin(b_min, b_max, "bin", path_input);
-    run_jobs(b_min, b_max, "bin", NEVENT);
     return 0;
 }
