@@ -118,14 +118,20 @@ There are two methods to process data from AMPT:
 
 ## New method of running AMPT
 
-Using multiple bash scripts does not allow for a good readable code and can cause problems when it comes to directories. For that reason a **C++** version was developed, which handles the running and compilation. Additional advantages are that command line parsing is easy to setup and that extra functionality was added with respect to the previous method.
+Using multiple bash scripts does not allow for a good readable code and can cause problems when it comes to file handling. For that reason a **C++** version was developed, which handles the running and compilation. Additional advantages are that command line parsing is easy to setup and that extra functionality was added with respect to the previous method.
 The program is called **ampt-mp** and needs to be compiled with **C++17**. In addition the **[fmt](https://github.com/fmtlib/fmt)**, **[argparse](https://github.com/p-ranav/argparse)** and **[OMP](https://github.com/OpenMP/sources)** libraries were used. **OMP** is usually already installed on Linux.
 By default it is assumed that all input files are in the directory `./input`, the source is in `./src/original` and the data is stored in `./data`. At first use, the following commands can be ran in the terminal.
 
-```shell
-./ampt-mp -h # See options for compiling AMPT
+```
+./ampt-mp -h <span style="color:green"># See options for compiling AMPT</span>
 ./ampt-mp -h # See options for running AMPT
 
 ./ampt-mp compiler -b 1 12 # Compiles every bin with the given source code
 ./ampt-mp -o test -b 1 12 # Runs AMPT in every bin and stores the data in ./data/test
 ```
+
+> [!WARNING] Remark:
+
+### Remark
+
+The program does not solve racing conditions, causing a spread in the runtime of seperate instances even when they run the exact same simulation.
