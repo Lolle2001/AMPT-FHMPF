@@ -23,11 +23,17 @@ license: MIT
 version: 1.0.0
 date-released: "2024-07-20"
 preferred-citation:
+  type: thesis
   authors:
     - given-names: Lieuwe Johannes
       family-names: Huisman
   title: "Characterization of QGP, A comparison between a fluid dynamical approach and transport approach."
-  type: thesis
+  thesis-type: BsC
   institution:
     name: Utrecht University
+    city: Utrecht
+    country: NL
+  database: Utrecht University Student Theses Repository
+  date-published: 2024-07-20
   year: 2024
+  url: https://studenttheses.uu.nl/
