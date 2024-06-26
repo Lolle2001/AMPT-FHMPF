@@ -45,7 +45,7 @@ AMPT
 At first use, the following commands can be ran in the terminal.
 
 ```
-./ampt-mp -h # See options for compiling AMPT</span>
+./ampt-mp -h # See options for compiling AMPT
 ./ampt-mp -h # See options for running AMPT
 
 ./ampt-mp compiler -b 1 12 # Compiles every bin with the given source code
@@ -156,8 +156,9 @@ Note that first the file must be generated with `utils/inputgen.py`, which is a 
 python3 utils/inputgen.py
 ```
 
+
+<---
 ## References
-
 <a id="1">[1]</a> Z. W. Lin, C. M. Ko, B. A. Li, B. Zhang and S. Pal, A Multi-phase transport model for relativistic heavy ion collisions. Phys. Rev. C 72, 064901 (2005). https://doi.org/10.1103/PhysRevC.72.064901
-
+--->
 [^1]: Z. W. Lin, C. M. Ko, B. A. Li, B. Zhang and S. Pal, A Multi-phase transport model for relativistic heavy ion collisions. Phys. Rev. C 72, 064901 (2005). https://doi.org/10.1103/PhysRevC.72.064901

@@ -10,7 +10,7 @@ src/binaries/**
 !src/binaries/ampt-v1.26t9b-v2.26t9b.zip
 src/test
 src/original_up
-
+ampt-mp
 
 !input/default.par
 !input/test.par
