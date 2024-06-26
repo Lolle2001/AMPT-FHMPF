@@ -1,8 +1,8 @@
 # AMPT-FHMPF
 
 > [!IMPORTANT]
-> If you use/fork this code, please use the following citation:<br><br>
-> L. J. Huisman, _File handling and multiprocessing framework for AMPT_, thesis database UU (2024). https://link <br><br>
+> If you use/fork this code, please use the following citation for the software:<br><br>
+> L. J. Huisman, _File handling and multiprocessing framework for AMPT_, version 1.0.0 (2024). https://github.com/Lolle2001/AMPT-Processing <br><br>
 > In addition, AMPT must also be cited, because AMPT source code comes with this repository[^1].
 
 #
