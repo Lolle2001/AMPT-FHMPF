@@ -1,9 +1,30 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+title: File handling and multiprocessing framework for AMPT
+message: Please cite this software and the preferred citation.
+type: software
 authors:
-  - family-names: Huisman
-    given-names: Lieuwe Johannes
-title: "File handling and multiprocessing framework for AMPT"
+  - given-names: Lieuwe Johannes
+    family-names: Huisman
+repository-code: "https://github.com/Lolle2001/AMPT-Processing"
+abstract: >-
+  This framework is a crude way of running multiple
+  instances of AMPT simultaneously. To achieve that it
+  handles files, compilation and moves results to a desired
+  directory.
+keywords:
+  - AMPT
+  - Multiprocessing
+  - Framework
+  - Heavy ion collisions
+license: MIT
 version: 1.0.0
-date-released: 2024-06-24
-url: https://github.com/Lolle2001/AMPT-Processing
+date-released: "2024-07-20"
+preferred-citation:
+  authors:
+    - given-names: Lieuwe Johannes
+      family-names: Huisman
+  title: "Characterization of QGP, A comparison between a fluid dynamical approach and transport approach."
+  type: thesis
