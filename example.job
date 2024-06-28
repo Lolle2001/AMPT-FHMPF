@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+bash compile-ampt-mp.sh
+./ampt-mp compiler -in ampt -b 1 4 -s original -sd src -bd bin
+./ampt-mp -i ampt@default.par -o AuAu@200GeV-S1-C1-00-005-Test -in ampt -b 1 4
+

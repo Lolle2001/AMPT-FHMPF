@@ -1,16 +1,16 @@
-20            ! EFRM (sqrt(S_NN) in GeV if FRAME is CMS)
+200            ! EFRM (sqrt(S_NN) in GeV if FRAME is CMS)
 CMS             ! FRAME
 A               ! PROJ
 A               ! TARG
-208             ! IAP (projectile A number)
-82              ! IZP (projectile Z number)
-208             ! IAT (target A number)
-82              ! IZT (target Z number)
+197             ! IAP (projectile A number)
+79              ! IZP (projectile Z number)
+197             ! IAT (target A number)
+79              ! IZT (target Z number)
 1		! NEVNT (total number of events)
 0.              ! BMIN (mininum impact parameter in fm) 
-3.5		! BMAX (maximum impact parameter in fm, also see below)
+3.		! BMAX (maximum impact parameter in fm, also see below)
 4		! ISOFT (D=4): select Default AMPT or String Melting(see below)
-1000		! NTMAX: number of timesteps (D=150), see below
+150		! NTMAX: number of timesteps (D=150), see below
 0.2		! DT: timestep in fm (hadron cascade time= DT*NTMAX) (D=0.2)
 0.55		! PARJ(41): parameter a in Lund symmetric splitting function
 0.15    	! PARJ(42): parameter b in Lund symmetric splitting function
@@ -25,9 +25,9 @@ A               ! TARG
 0.33d0		! alpha in parton cascade (D=0.33d0), see parton screening mass
 1d6		! dpcoal in GeV
 1d6		! drcoal in fm
-11		! ihjsed: take HIJING seed from below (D=0)or at runtime(11)
+0		! ihjsed: take HIJING seed from below (D=0)or at runtime(11)
 13150909	! random seed for HIJING
-24463
+8		! random seed for parton cascade
 0		! flag for K0s weak decays (D=0,no; 1,yes)
 1		! flag for phi decays at end of hadron cascade (D=1,yes; 0,no)
 0		! flag for pi0 decays at end of hadron cascade (D=0,no; 1,yes)

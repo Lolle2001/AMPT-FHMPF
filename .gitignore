@@ -5,6 +5,7 @@ input/**
 .vscode
 build
 *.job
+!example.job
 
 src/binaries/**
 !src/binaries/ampt-v1.26t9b-v2.26t9b.zip
@@ -12,8 +13,8 @@ src/test
 src/original_up
 ampt-mp
 
-!input/default.par
-!input/test.par
+!input/ampt@default.par
+# !input/test.par
 
 
 utils/__pycache__
@@ -24,3 +25,11 @@ utils/process.sh
 
 
 !data/.gitignore
+
+server
+
+src/inputgen.py
+
+utils/utilsold
+utils/runold
+runold

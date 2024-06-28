@@ -40,6 +40,17 @@ int main(int argc, char **argv)
     program.add_argument("-in", "--instance-name")
         .default_value(std::string{"ampt"})
         .help("the prefix of the instance directories.");
+
+    /* TO BE IMPLEMENTED
+        program.add_argument("-if", "--input-format")
+        .default_value(std::string{"ampt"})
+        .choices("ampt", "json");
+
+    program.add_argument("-rgm", "--random-generator-mode")
+        .default_value("both")
+        .choices("hijing", "zpc", "both");
+    */
+    
     argparse::ArgumentParser compiler("compiler", COMPILER_VERSION);
     compiler.add_description("the compiler is a subprogram that makes and compiles the instance directories in the bin directory.");
     compiler.add_argument("-s", "--source")
