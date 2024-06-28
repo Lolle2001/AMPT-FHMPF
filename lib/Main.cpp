@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     program.add_description("This program is an interface to run multiple AMPT executables simultaneously such that all CPU cores can be used. Disclaimer: the method used has no proper synchronization.");
 
     program.add_argument("-i", "--input")
-        .default_value(std::string{"default.par"})
+        .default_value(std::string{"ampt@default.par"})
         .help("the filename of the input.");
     program.add_argument("-id", "--input-directory")
         .default_value(std::string{"./input"})
