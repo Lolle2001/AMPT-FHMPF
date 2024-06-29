@@ -22,22 +22,22 @@ By default it is assumed that all input files are in the directory `./input`, th
 ```
 AMPT
 ├── bin
-│   ├── ampt_1
-│   ├── ampt_2
+│   ├── ampt-1
+│   ├── ampt-2
 │   ├── ...
-│   ├── ampt_n
-│   ├── anim_1
+│   ├── ampt-n
+│   ├── anim-1
 │   └── ...
 ├── input
 │   └── *.par
 ├── data
-│   ├── run_1
-│   ├── run_2
+│   ├── run-1
+│   ├── run-2
 │   └── ...
 ├── src
 │   ├── original
-│   ├── edited
-│   ├── ellipticflow
+│   ├── animation
+│   ├── hijing-only
 │   └── ...
 └── ampt-mp
 ```

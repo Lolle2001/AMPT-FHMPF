@@ -18,7 +18,7 @@ ampt-mp
 
 
 utils/__pycache__
-utils/centrality_tables
+# utils/centrality_tables
 
 
 utils/process.sh
