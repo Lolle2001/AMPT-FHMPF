@@ -1,3 +1,4 @@
+# Copyright (C) 2024 Lieuwe Huisman
 import os
 import random
 import numpy as np
@@ -299,6 +300,41 @@ class AMPT_Input_Generator:
         self.write_input(filename = prefix + "-" + f"{int(lower[0][0]):02d}"+ "-" + f"{int(upper[-1][0]):03d}",**input_kwargs)
         print(lower, upper)
 
+elements = {"U "  : {"Z" : 92, "A" : 238, "EFRM" : 193, "BMIN" : 0, "BMAX" : 21.5, "NAME" : "UU@193GeV-S1-G"},
+            "Au" : {"Z" : 79, "A" : 197, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "AuAu@200GeV-S1-G"},
+            "Pb" : {"Z" : 82, "A" : 208, "EFRM" : 5020, "BMIN" : 0, "BMAX" : 20, "NAME" : "PbPb@5.02TeV-S1-G"},
+            "O "  : {"Z" : 8,  "A" : 16 , "EFRM" : 200, "BMIN" : 0, "BMAX"  : 20, "NAME" : "OO@200GeV-S1-G" },
+            "Xe" : {"Z" : 54, "A" : 132, "EFRM" : 5440, "BMIN" : 0, "BMAX" : 20, "NAME" : "XeXe@5.44TeV-S1-G"},
+            "Ba" : {"Z" : 56, "A" : 138, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" :"BaBa@200GeV-S1-G"},
+            "Zr" : {"Z" : 40, "A" : 90, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "ZrZr@200GeV-S1-G"},
+            "Cu" : {"Z" : 29, "A" : 63, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "CuCu@200GeV-S1-G"},
+            "Rb" : {"Z": 37, "A" : 85, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "RbRb@200GeV-S1-G"},
+            "He" : {"Z" : 2, "A" : 4, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "HeHe@200GeV-S1-G"},
+            "Ru" : {"Z" : 44, "A" : 102, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" :"RuRu@200GeV-S1-G"}
+            }
+
+for key,val in elements.items():
+
+    gen = AMPT_Input_Generator()
+    gen.defaultdict["EFRM"] = val["EFRM"]
+    gen.defaultdict["IAP"] = val["A"]
+    gen.defaultdict["IZP"] = val["Z"]
+    gen.defaultdict["IAT"] = val["A"]
+    gen.defaultdict["IZT"] = val["Z"]
+    gen.defaultdict["NTMAX"] = 150
+    gen.defaultdict["NEVENT"] = 10000
+    gen.defaultdict["BMIN"] = val["BMIN"]
+    gen.defaultdict["BMAX"] = val["BMAX"]
+    gen.defaultdict["ISOFT"] = 0
+    gen.write_input(filename = val["NAME"])
+
+
+
+
+
+
+
+
 gen = AMPT_Input_Generator()
 
 # gen.write_input()
@@ -421,3 +457,6 @@ gen.defaultdict["IZT"] = 92
 gen.defaultdict["NTMAX"] = 1000
 
 gen.write_input_for_multiple_centralities(table, prefix = "UU@193GeV-S1-C3")
+
+
+

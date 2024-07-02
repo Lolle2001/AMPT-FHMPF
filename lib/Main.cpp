@@ -1,3 +1,5 @@
+// Copyright (C) 2024 Lieuwe Huisman
+
 #include <fmt/chrono.h>
 #include "Manager.hpp"
 #include <iostream>
@@ -6,6 +8,7 @@
 #include "Timer.hpp"
 #include <argparse/argparse.hpp>
 #define NAME "ampt-mp"
+#define AUTHOR "Liewe Huisman"
 #define PROGRAM_VERSION "1.0.0"
 #define COMPILER_VERSION "1.0.0"
 #define DEBUG 0
@@ -49,6 +52,17 @@ int main(int argc, char **argv)
     program.add_argument("-rgm", "--random-generator-mode")
         .default_value("both")
         .choices("hijing", "zpc", "both");
+
+    argparse::ArgumentParser subparser_add("add");
+    
+    subparser_add.add_description("add multiple different folders and combine them in one new, if two seperate runs have been done with the same input file.");
+    ampt.log -> renamed into ampt-1-10.log , ampt-11-20.log etc. 
+    subparser_add.add_argument("-f", "--file");
+    subparser_add.add_argument("-fd", "--file-directory");
+    // subparser_add.add_argument("-fid", "--file-is-directory").flag();
+    -> add warning message and check if directories/files would be overwritten unintionally.
+
+
     */
     
     argparse::ArgumentParser compiler("compiler", COMPILER_VERSION);

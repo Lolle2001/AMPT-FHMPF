@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Lieuwe Huisman
 #ifndef UTILITIES_HPP
 #define UTILITIES_HPP
 #include <filesystem>

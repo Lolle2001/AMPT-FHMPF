@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Lieuwe Huisman
 #include "Utilities.hpp"
 namespace Utilities
 {
@@ -5,15 +6,12 @@ namespace Utilities
     {
         try
         {
-            // Iterate through the directory
             for (const auto &entry : std::filesystem::directory_iterator(directory))
             {
-                // Check if the file has a .log extension
+
                 if (entry.is_regular_file() && entry.path().extension() == extension)
                 {
-                    // Remove the file
                     std::filesystem::remove(entry.path());
-                    // std::cout << "Removed: " << entry.path() << std::endl;
                 }
             }
         }
@@ -27,15 +25,11 @@ namespace Utilities
     {
         try
         {
-            // Iterate through the directory
             for (const auto &entry : std::filesystem::directory_iterator(directory_src))
             {
-                // Check if the file has a .log extension
                 if (entry.is_regular_file() && entry.path().extension() == extension)
                 {
-                    // Remove the file
                     std::filesystem::copy(entry.path(), directory_out, option);
-                    // std::cout << "Copied: " << entry.path() << std::endl;
                 }
             }
         }

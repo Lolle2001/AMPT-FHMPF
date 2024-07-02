@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Lieuwe Huisman
 #ifndef MANAGER_HPP
 #define MANAGER_HPP
 #include "InstanceManager.hpp"

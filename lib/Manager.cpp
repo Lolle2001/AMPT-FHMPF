@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Lieuwe Huisman
 #include "Manager.hpp"
 
 namespace AMPT
@@ -181,7 +182,7 @@ namespace AMPT
         s += fmt::format("{} {:<65} {}\n", w_00, "AMPT Multiprocessing Interface", w_00);
         s += fmt::format("{} {:<65} {}\n", w_00, "Version 1.0.0", w_00);
         s += fmt::format("{} {:<65} {}\n", w_00, "Made by Lieuwe Huisman", w_00);
-        s += fmt::format("{} {:<65} {}\n", w_00, "Made for AMPT version: v23.02.2024", w_00);
+        s += fmt::format("{} {:<65} {}\n", w_00, "Made for AMPT version: v1.26t9b-v2.26t9b", w_00);
         s += fmt::format("{}{:<67}{}\n", b_00, Utilities::repeat(67, "─"), b_01);
         s += fmt::format("{} {:<16} : {:03} to {:03} {:<35} {}\n", w_00, "Bin range", bin_id_min, bin_id_max, "", w_00);
         s += fmt::format("{} {:<16} : {:<10} {:<35} {}\n", w_00, "Number of events", NEVENT, "", w_00);

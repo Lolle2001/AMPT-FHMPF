@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Lieuwe Huisman
 #ifndef PROGRESSBAR_HPP
 #define PROGRESSBAR_HPP
 

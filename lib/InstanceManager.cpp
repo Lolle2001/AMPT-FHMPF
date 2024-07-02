@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Lieuwe Huisman
 #include "InstanceManager.hpp"
 
 namespace AMPT

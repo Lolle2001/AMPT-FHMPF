@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Lieuwe Huisman
 #ifndef INSTANCEMANAGER_HPP
 #define INSTANCEMANAGER_HPP
 
