@@ -2,8 +2,14 @@
 import os
 import random
 import numpy as np
+import mendeleev as me
 
 
+def isotope_exists(element, mass_number):
+    for iso in element.isotopes:
+        if(iso.mass_number == mass_number):
+            return True
+    return False
 
 class AMPT_Input_Generator:
 
@@ -241,6 +247,7 @@ class AMPT_Input_Generator:
                     generate_zpc_seed = True):
        
         
+        os.makedirs(directory, exist_ok=True)
         File = open("{0}/{1}.{2}".format(directory, filename, extension), "w")
         for j, key in enumerate(self.defaultdict):
             if(j < 42 or j > 48):
@@ -298,42 +305,52 @@ class AMPT_Input_Generator:
         self.defaultdict["BMIN"] = lower[0][1]
         self.defaultdict["BMAX"] = upper[-1][1]
         self.write_input(filename = prefix + "-" + f"{int(lower[0][0]):02d}"+ "-" + f"{int(upper[-1][0]):03d}",**input_kwargs)
-        print(lower, upper)
-
-elements = {"U "  : {"Z" : 92, "A" : 238, "EFRM" : 193, "BMIN" : 0, "BMAX" : 21.5, "NAME" : "UU@193GeV-S1-G"},
-            "Au" : {"Z" : 79, "A" : 197, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "AuAu@200GeV-S1-G"},
-            "Pb" : {"Z" : 82, "A" : 208, "EFRM" : 5020, "BMIN" : 0, "BMAX" : 20, "NAME" : "PbPb@5.02TeV-S1-G"},
-            "O "  : {"Z" : 8,  "A" : 16 , "EFRM" : 200, "BMIN" : 0, "BMAX"  : 20, "NAME" : "OO@200GeV-S1-G" },
-            "Xe" : {"Z" : 54, "A" : 132, "EFRM" : 5440, "BMIN" : 0, "BMAX" : 20, "NAME" : "XeXe@5.44TeV-S1-G"},
-            "Ba" : {"Z" : 56, "A" : 138, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" :"BaBa@200GeV-S1-G"},
-            "Zr" : {"Z" : 40, "A" : 90, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "ZrZr@200GeV-S1-G"},
-            "Cu" : {"Z" : 29, "A" : 63, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "CuCu@200GeV-S1-G"},
-            "Rb" : {"Z": 37, "A" : 85, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "RbRb@200GeV-S1-G"},
-            "He" : {"Z" : 2, "A" : 4, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" : "HeHe@200GeV-S1-G"},
-            "Ru" : {"Z" : 44, "A" : 102, "EFRM" : 200, "BMIN" : 0, "BMAX" : 20, "NAME" :"RuRu@200GeV-S1-G"}
-            }
-
-for key,val in elements.items():
-
-    gen = AMPT_Input_Generator()
-    gen.defaultdict["EFRM"] = val["EFRM"]
-    gen.defaultdict["IAP"] = val["A"]
-    gen.defaultdict["IZP"] = val["Z"]
-    gen.defaultdict["IAT"] = val["A"]
-    gen.defaultdict["IZT"] = val["Z"]
-    gen.defaultdict["NTMAX"] = 150
-    gen.defaultdict["NEVENT"] = 10000
-    gen.defaultdict["BMIN"] = val["BMIN"]
-    gen.defaultdict["BMAX"] = val["BMAX"]
-    gen.defaultdict["ISOFT"] = 0
-    gen.write_input(filename = val["NAME"])
+        # print(lower, upper)
 
 
+    def write_for_glauber(self, targetatomic, targetmass, projectileatomic, projectilemass, energy, nevent, b_max = 30, input_kwargs = {}, postfix = "S1-G"):
+        target = me.element(targetatomic)
+        projectile = me.element(projectileatomic)
+        
+        if isotope_exists(target, targetmass) and isotope_exists(projectile, projectilemass):
+            self.defaultdict["PROJ"] = "A"
+            self.defaultdict["TARG"] = "A"
+            self.defaultdict["IZT"] = target.atomic_number
+            self.defaultdict["IAT"] = targetmass
+            self.defaultdict["IZP"] = projectile.atomic_number
+            self.defaultdict["IAP"] = projectilemass
+            self.defaultdict["EFRM"] = energy
+            self.defaultdict["ISOFT"] = 0
+            self.defaultdict["NTMAX"] = 150
+            self.defaultdict["BMIN"] = 0
+            self.defaultdict["BMAX"] = b_max
+            self.defaultdict["NEVENT"] =nevent
+
+            if energy >= 1000:
+                energystr = f"{energy/1000:3g}TeV"
+            else:
+                energystr = f"{energy:3g}GeV"
+
+            self.write_input(filename = f"{target.symbol}{targetmass}{projectile.symbol}{projectilemass}@{energystr}-{postfix}", **input_kwargs)
+        
+            
 
 
+gen = AMPT_Input_Generator()
 
-
-
+gen.write_for_glauber(92, 238, 92, 238, 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(79, 197, 79, 197, 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(82, 208, 82, 208, 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(8, 16, 8, 16, 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(54, 132, 54, 132, 200, 100000 , input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(56, 138, 56, 138, 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(40, 90 , 40, 90 , 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(29, 63 , 29, 63 , 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(37, 85 , 37, 85 , 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(2 , 4  , 2 , 4  , 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(44, 102, 44, 102, 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(1, 3, 1, 3, 200, 100000, input_kwargs={"directory" : "input/glauber"})
+gen.write_for_glauber(118, 294, 118, 294, 200, 1000, input_kwargs={"directory" : "input/glauber"})
 
 gen = AMPT_Input_Generator()
 

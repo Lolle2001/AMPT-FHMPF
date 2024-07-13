@@ -54,17 +54,18 @@ int main(int argc, char **argv)
         .choices("hijing", "zpc", "both");
 
     argparse::ArgumentParser subparser_add("add");
-    
+
     subparser_add.add_description("add multiple different folders and combine them in one new, if two seperate runs have been done with the same input file.");
-    ampt.log -> renamed into ampt-1-10.log , ampt-11-20.log etc. 
+    ampt.log -> renamed into ampt-1-10.log , ampt-11-20.log etc.
     subparser_add.add_argument("-f", "--file");
     subparser_add.add_argument("-fd", "--file-directory");
     // subparser_add.add_argument("-fid", "--file-is-directory").flag();
     -> add warning message and check if directories/files would be overwritten unintionally.
 
 
+
     */
-    
+
     argparse::ArgumentParser compiler("compiler", COMPILER_VERSION);
     compiler.add_description("the compiler is a subprogram that makes and compiles the instance directories in the bin directory.");
     compiler.add_argument("-s", "--source")
