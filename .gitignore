@@ -1,9 +1,35 @@
-data
+data/** 
 output
-bin
-input/*
+bin/**
+input/**
 .vscode
-token
+build
+*.job
+!example.job
 
-!input/default.par
-!input/test.par
+src/binaries/**
+!src/binaries/ampt-v1.26t9b-v2.26t9b.zip
+src/test
+src/original_up
+ampt-mp
+
+!input/ampt@default.par
+# !input/test.par
+
+
+utils/__pycache__
+# utils/centrality_tables
+
+
+utils/process.sh
+
+
+!data/.gitignore
+
+server
+
+src/inputgen.py
+
+utils/utilsold
+utils/runold
+runold
